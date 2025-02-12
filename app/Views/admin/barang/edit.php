@@ -16,9 +16,28 @@
     </select>
 
     <label>Harga Beli</label>
-    <input type="number" name="harga_beli" value="<?= $barang['harga_beli']; ?>" class="form-control" required>
+    <input type="number" name="harga_beli" id="harga_beli" value="<?= $barang['harga_beli']; ?>" class="form-control" required>
+
+    <label>Harga Jual 1 (10% Markup)</label>
+    <input type="number" id="harga_jual_1" value="<?= $barang['harga_jual_1']; ?>" class="form-control" readonly>
+
+    <label>Harga Jual 2 (20% Markup)</label>
+    <input type="number" id="harga_jual_2" value="<?= $barang['harga_jual_2']; ?>" class="form-control" readonly>
+
+    <label>Harga Jual 3 (30% Markup)</label>
+    <input type="number" id="harga_jual_3" value="<?= $barang['harga_jual_3']; ?>" class="form-control" readonly>
 
     <button type="submit" class="btn btn-success mt-3">Update</button>
 </form>
+
+<script>
+    document.getElementById("harga_beli").addEventListener("input", function () {
+        let hargaBeli = parseFloat(this.value) || 0;
+        
+        document.getElementById("harga_jual_1").value = hargaBeli + (hargaBeli * 0.10);
+        document.getElementById("harga_jual_2").value = hargaBeli + (hargaBeli * 0.20);
+        document.getElementById("harga_jual_3").value = hargaBeli + (hargaBeli * 0.30);
+    });
+</script>
 
 <?= $this->include('admin/templates/footer') ?>

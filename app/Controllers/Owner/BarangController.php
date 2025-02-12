@@ -75,7 +75,7 @@ class BarangController extends BaseController
             // Simpan log stok
             $this->logsModel->save([
                 'id_petugas' => session()->get('id'),
-                'action'     => 'tambah Barang',
+                'action'     => 'tambah',
                 'msg'        => "Menambahkan stok barang: " . $data['nama_barang'] . " sebanyak " . $stok,
                 'old_data'   => null,
                 'new_data'   => json_encode($stokData),
@@ -86,7 +86,7 @@ class BarangController extends BaseController
         // Simpan log barang
         $this->logsModel->save([
             'id_petugas' => session()->get('id'),
-            'action'     => 'tambah Stok',
+            'action'     => 'tambah',
             'msg'        => "Menambahkan barang: " . $data['nama_barang'],
             'old_data'   => null,
             'new_data'   => json_encode($data),
@@ -149,8 +149,8 @@ class BarangController extends BaseController
 
         $this->logsModel->save([
             'id_petugas' => session()->get('id'),
-            'action'     => 'edit Barang',
-            'msg'        => "Mengedit barang: {$oldData['nama_barang']} menjadi {$newData['nama_barang']}",
+            'action'     => 'edit',
+            'msg'        => "Mengedit barang: {$oldData['nama_barang']}",
             'old_data'   => json_encode($logOldData),
             'new_data'   => json_encode($logNewData),
             'time'       => date('Y-m-d H:i:s')
@@ -241,7 +241,7 @@ class BarangController extends BaseController
         // Simpan log penambahan stok
         $this->logsModel->save([
             'id_petugas' => session()->get('id'),
-            'action'     => 'tambah_stok',
+            'action'     => 'tambah',
             'msg'        => "Menambahkan stok untuk barang: $kode_barang.",
             'old_data'   => json_encode([
                 'total_stok' => $totalStokLama
