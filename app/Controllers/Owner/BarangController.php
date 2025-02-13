@@ -283,4 +283,80 @@ class BarangController extends BaseController
 
         return view('admin/barang/detail', $data);
     }
+
+    // Form Edit Stok
+    public function editStokForm($id_stok)
+    {
+        $stok = $this->stokModel->find($id_stok);
+
+        if (!$stok) {
+            return redirect()->to(base_url('owner/barang'))->with('error', 'Stok tidak ditemukan!');
+        }
+
+        $data = [
+            'stok' => $stok,
+            'barang' => $this->barangModel->where('kode_barang', $stok['kode_barang'])->first(),
+        ];
+
+        return view('admin/barang/edit_stok', $data);
+    }
+
+    // Fungsi untuk Update Stok
+    public function updateStok($id)
+    {
+        $stok = $this->stokModel->find($id);
+
+        if (!$stok) {
+            return redirect()->to(base_url('owner/barang'))->with('error', 'Stok tidak ditemukan!');
+        }
+
+        $kode_barang = $stok['kode_barang']; // Ambil kode barang dari data stok
+
+        $newData = [
+            'stok' => $this->request->getPost('stok'),
+            'tanggal_beli' => $this->request->getPost('tanggal_beli'),
+            'tanggal_expired' => $this->request->getPost('tanggal_expired'),
+        ];
+
+        $this->stokModel->update($id, $newData);
+
+        // Tambahkan log perubahan stok
+        $this->logsModel->save([
+            'id_petugas' => session()->get('id'),
+            'action'     => 'edit',
+            'msg'        => "Mengedit stok barang ID: " . $id,
+            'old_data'   => json_encode($stok),
+            'new_data'   => json_encode($newData),
+            'time'       => date('Y-m-d H:i:s')
+        ]);
+
+        session()->setFlashdata('success', 'Stok barang berhasil diperbarui!');
+        return redirect()->to('/owner/barang/detail/' . $kode_barang);
+    }
+
+
+
+    // Fungsi untuk Menghapus Stok
+    public function deleteStok($id)
+    {
+        $stok = $this->stokModel->find($id);
+
+        if (!$stok) {
+            return redirect()->back()->with('error', 'Stok tidak ditemukan!');
+        }
+
+        $this->stokModel->delete($id);
+
+        // Tambahkan log penghapusan stok
+        $this->logsModel->save([
+            'id_petugas' => session()->get('id'),
+            'action'     => 'hapus',
+            'msg'        => "Menghapus stok barang dengan ID: " . $id,
+            'old_data'   => json_encode($stok),
+            'new_data'   => null,
+            'time'       => date('Y-m-d H:i:s')
+        ]);
+
+        return redirect()->back()->with('success', 'Stok berhasil dihapus!');
+    }
 }

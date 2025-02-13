@@ -24,12 +24,13 @@
                 <th>Tanggal Beli</th>
                 <th>Tanggal Expired</th>
                 <th>Jumlah Stok</th>
+                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
             <?php if (empty($stokBarang)) : ?>
                 <tr>
-                    <td colspan="4">Tidak ada stok untuk barang ini.</td>
+                    <td colspan="6">Tidak ada stok untuk barang ini.</td>
                 </tr>
             <?php else : ?>
                 <?php foreach ($stokBarang as $stok) : ?>
@@ -38,11 +39,51 @@
                         <td><?= esc($stok['tanggal_beli']); ?></td>
                         <td><?= esc($stok['tanggal_expired']); ?></td>
                         <td><?= esc($stok['stok']); ?></td>
+                        <td>
+                            <a href="<?= base_url('owner/barang/editStokForm/' . $stok['id']) ?>" class="btn btn-warning">
+                                <i class='fas fa-edit' style='font-size:20px'></i>Edit
+                            </a>
+                            <button type="button" class="btn btn-danger deleteBtn" data-id="<?= $stok['id']; ?>">
+                                <i class='fas fa-trash-alt' style='font-size:20px'></i> Hapus
+                            </button>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             <?php endif; ?>
         </tbody>
+
     </table>
 </div>
+
+<script>
+    document.querySelectorAll('.deleteBtn').forEach(button => {
+        button.addEventListener('click', function() {
+            let stokId = this.getAttribute('data-id');
+            Swal.fire({
+                title: "Konfirmasi",
+                text: "Apakah Anda yakin ingin menghapus stok ini?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Ya, Hapus!",
+                cancelButtonText: "Batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "<?= base_url('owner/barang/deleteStok/') ?>" + stokId;
+                }
+            });
+        });
+    });
+
+    <?php if (session()->getFlashdata('success')) : ?>
+        Swal.fire({
+            title: "Berhasil!",
+            text: "<?= session()->getFlashdata('success'); ?>",
+            icon: "success",
+            confirmButtonText: "OK"
+        });
+    <?php endif; ?>
+</script>
 
 <?= $this->include('admin/templates/footer') ?>

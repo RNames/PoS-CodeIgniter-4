@@ -27,7 +27,7 @@ class BarangModel extends Model
     {
         // Ambil ID terakhir
         $lastBarang = $this->orderBy('id', 'DESC')->first();
-        
+
         if ($lastBarang) {
             // Ambil angka terakhir dari ID_barang (contoh: b005 -> 5)
             $lastNumber = intval(substr($lastBarang['kode_barang'], 1));
@@ -53,7 +53,7 @@ class BarangModel extends Model
     public function getBarangWithTotalStok()
     {
         return $this->select('barang.*, kategori.nama_kategori, 
-                COALESCE(SUM(stok.stok), 0) + barang.stok AS total_stok')
+            COALESCE(SUM(stok.stok), 0) AS total_stok')
             ->join('kategori', 'kategori.id = barang.id_kategori', 'left')
             ->join('stok', 'stok.kode_barang = barang.kode_barang', 'left')
             ->groupBy('barang.kode_barang')

@@ -23,7 +23,7 @@ $routes->group('owner', ['filter' => 'role:owner'], function ($routes) {
 
 
 
-    // CRUD Petugas
+    //Petugas
     $routes->get('petugas', 'Owner\SetPetugasController::index');
     $routes->get('petugas/create', 'Owner\SetPetugasController::create');
     $routes->post('petugas/store', 'Owner\SetPetugasController::store');
@@ -31,6 +31,7 @@ $routes->group('owner', ['filter' => 'role:owner'], function ($routes) {
     $routes->post('petugas/update/(:num)', 'Owner\SetPetugasController::update/$1');
     $routes->get('petugas/delete/(:num)', 'Owner\SetPetugasController::delete/$1');
 
+    //Member
     $routes->get('member', 'Owner\SetMemberController::index');
     $routes->get('member/create', 'Owner\SetMemberController::create');
     $routes->post('member/store', 'Owner\SetMemberController::store');
@@ -39,18 +40,23 @@ $routes->group('owner', ['filter' => 'role:owner'], function ($routes) {
     $routes->get('member/delete/(:num)', 'Owner\SetMemberController::delete/$1');
     $routes->get('member/detail/(:num)', 'Owner\SetMemberController::detail/$1');
 
+    //Barang
     $routes->get('barang', 'Owner\BarangController::index');
     $routes->get('barang/create', 'Owner\BarangController::create');
     $routes->post('barang/store', 'Owner\BarangController::store');
     $routes->get('barang/edit/(:num)', 'Owner\BarangController::edit/$1');
     $routes->post('barang/update/(:num)', 'Owner\BarangController::update/$1');
     $routes->get('barang/delete/(:num)', 'Owner\BarangController::delete/$1');
+
     $routes->get('barang/tambahStok/(:segment)', 'Owner\BarangController::tambahStokForm/$1');
     $routes->post('barang/tambahStok', 'Owner\BarangController::tambahStok');
     $routes->get('barang/detail/(:segment)', 'Owner\BarangController::detail/$1');
 
+    $routes->get('barang/editStokForm/(:num)', 'Owner\BarangController::editStokForm/$1');
+    $routes->post('barang/updateStok/(:num)', 'Owner\BarangController::updateStok/$1');
+    $routes->get('barang/deleteStok/(:num)', 'Owner\BarangController::deleteStok/$1');
 
-
+    //Kategori
     $routes->get('kategori', 'Owner\KategoriController::index');
     $routes->get('kategori/create', 'Owner\KategoriController::create');
     $routes->post('kategori/store', 'Owner\KategoriController::store');
@@ -58,6 +64,7 @@ $routes->group('owner', ['filter' => 'role:owner'], function ($routes) {
     $routes->post('kategori/update/(:num)', 'Owner\KategoriController::update/$1');
     $routes->get('kategori/delete/(:num)', 'Owner\KategoriController::delete/$1');
 
+    //Transaksi
     $routes->get('transaksi', 'Owner\TransaksiController::index');
     $routes->post('transaksi/proses', 'Owner\TransaksiController::proses');
 });
