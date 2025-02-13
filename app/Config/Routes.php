@@ -67,6 +67,9 @@ $routes->group('owner', ['filter' => 'role:owner'], function ($routes) {
     //Transaksi
     $routes->get('transaksi', 'Owner\TransaksiController::index');
     $routes->post('transaksi/proses', 'Owner\TransaksiController::proses');
+   
+    $routes->get('transaksi/laporan', 'Owner\LaporanController::index');
+
 });
 
 // **GROUP PETUGAS**

@@ -6,46 +6,32 @@
     <form id="transaksiForm" action="<?= base_url('owner/transaksi/proses') ?>" method="post">
         <input type="hidden" name="tipe_member" id="tipe_member">
 
-        <div class="form-group">
-            <label>Pilih Member</label>
-            <select name="id_member" id="id_member" class="form-select single-select" required>
-                <option value="">-- Pilih Member --</option>
-
-                <?php foreach ($members as $member) : ?>
-                    <?php if ($member['tipe_member'] == 3) : ?>
-                        <option value="<?= $member['id'] ?>" data-type="<?= $member['tipe_member'] ?>">
-                            Tipe <?= $member['tipe_member'] ?> | <?= $member['nm_member'] ?>
-                        </option>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-
-                <?php foreach ($members as $member) : ?>
-                    <?php if ($member['tipe_member'] != 3) : ?>
-                        <option value="<?= $member['id'] ?>" data-type="<?= $member['tipe_member'] ?>">
-                            Tipe <?= $member['tipe_member'] ?> | <?= $member['nm_member'] ?>
-                        </option>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-            </select>
-        </div>
 
         <div class="form-group">
-            <label>Cari Barang</label>
-            <select id="searchBarang" class="form-select single-select">
-                <option value="">-- Cari Barang (Nama/Kode) --</option>
-                <?php foreach ($barangs as $barang) : ?>
-                    <option value="<?= $barang['id'] ?>"
-                        data-nama="<?= $barang['nama_barang'] ?>"
-                        data-kode="<?= $barang['kode_barang'] ?>"
-                        data-harga1="<?= $barang['harga_jual_1'] ?>"
-                        data-harga2="<?= $barang['harga_jual_2'] ?>"
-                        data-harga3="<?= $barang['harga_jual_3'] ?>"
-                        data-stok="<?= $barang['total_stok'] ?>">
-                        <?= $barang['kode_barang'] ?> - <?= $barang['nama_barang'] ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+    <label>Pilih Member</label>
+    <select name="id_member" id="id_member" class="form-select single-select" required>
+        <option value="">-- Pilih Member --</option>
+
+        <!-- Menampilkan Member dengan tipe 3 terlebih dahulu -->
+        <?php foreach ($members as $member) : ?>
+            <?php if ($member['tipe_member'] == 3) : ?>
+                <option value="<?= $member['id'] ?>" data-type="<?= $member['tipe_member'] ?>">
+                    Tipe <?= $member['tipe_member'] ?> | <?= $member['nm_member'] ?>
+                </option>
+            <?php endif; ?>
+        <?php endforeach; ?>
+
+        <!-- Menampilkan Member dengan tipe selain 3 -->
+        <?php foreach ($members as $member) : ?>
+            <?php if ($member['tipe_member'] != 3) : ?>
+                <option value="<?= $member['id'] ?>" data-type="<?= $member['tipe_member'] ?>">
+                    Tipe <?= $member['tipe_member'] ?> | <?= $member['nm_member'] ?>
+                </option>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </select>
+</div>
+
 
         <table class="table">
             <thead>
@@ -55,10 +41,31 @@
                     <th>Harga</th>
                     <th>Jumlah</th>
                     <th>Total</th>
-                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody id="barangList">
+                <?php foreach ($barangs as $barang) : ?>
+                    <tr>
+                        <td><?= $barang['nama_barang'] ?></td>
+                        <td class="stok-barang" data-stok="<?= $barang['total_stok'] ?>">
+                            <?= $barang['total_stok'] ?>
+                        </td>
+                        <td>
+                            <span class="harga-barang"
+                                data-harga1="<?= $barang['harga_jual_1'] ?>"
+                                data-harga2="<?= $barang['harga_jual_2'] ?>"
+                                data-harga3="<?= $barang['harga_jual_3'] ?>">-
+                            </span>
+                        </td>
+                        <td>
+                            <input type="number" name="jumlah[<?= $barang['id'] ?>]"
+                                class="form-control jumlah"
+                                min="0" max="<?= $barang['total_stok'] ?>"
+                                value="0">
+                        </td>
+                        <td class="total-harga">0</td>
+                    </tr>
+                <?php endforeach; ?>
             </tbody>
         </table>
 
@@ -105,6 +112,92 @@
 </div>
 
 <script>
+    document.getElementById("id_member").addEventListener("change", function() {
+        let tipeMember = this.options[this.selectedIndex].getAttribute("data-type");
+        document.getElementById("tipe_member").value = tipeMember;
+        document.querySelectorAll(".harga-barang").forEach(function(el) {
+            let harga = el.getAttribute("data-harga" + tipeMember);
+            el.innerText = formatRupiah(harga);
+        });
+        hitungTotal(); // Recalculate total when member changes
+    });
+
+    document.querySelectorAll(".jumlah").forEach(function(input) {
+        input.addEventListener("input", function() {
+            let maxStok = parseInt(this.getAttribute("max")) || 0;
+            let jumlah = parseInt(this.value) || 0;
+
+            if (jumlah > maxStok) {
+                this.value = maxStok;
+                Swal.fire({
+                    icon: "warning",
+                    title: "Stok Tidak Cukup!",
+                    text: "Stok tersedia hanya " + maxStok + " unit."
+                });
+            }
+
+            hitungTotal();
+        });
+    });
+
+
+    document.getElementById("diskon").addEventListener("input", function() {
+        if (parseInt(this.value) > 100) {
+            this.value = 100;
+        }
+        hitungTotal();
+    });
+
+    document.getElementById("totalBayar").addEventListener("input", function() {
+        hitungTotal();
+    });
+
+    function hitungTotal() {
+        let total = 0;
+        document.querySelectorAll("#barangList tr").forEach(function(row) {
+            let hargaText = row.querySelector(".harga-barang").innerText.replace(/\D/g, ""); // Remove non-numeric characters
+            let harga = parseInt(hargaText) || 0;
+            let jumlah = parseInt(row.querySelector(".jumlah").value) || 0;
+            let subtotal = Math.floor(harga * jumlah);
+            row.querySelector(".total-harga").innerText = formatRupiah(subtotal);
+            total += subtotal;
+        });
+
+        let ppn = Math.floor(total * 0.12);
+        let totalSetelahPajak = Math.floor(total + ppn);
+        let diskonPersen = parseInt(document.getElementById("diskon").value) || 0;
+        let diskon = Math.floor((totalSetelahPajak * diskonPersen) / 100);
+        let totalAkhir = Math.floor(totalSetelahPajak - diskon);
+
+        document.getElementById("totalSebelumPajak").value = formatRupiah(total);
+        document.getElementById("ppn").value = formatRupiah(ppn);
+        document.getElementById("totalSetelahPajak").value = formatRupiah(totalSetelahPajak);
+        document.getElementById("totalAkhir").value = formatRupiah(totalAkhir);
+
+        let totalBayar = parseInt(document.getElementById("totalBayar").value) || 0;
+        let kembalian = totalBayar - totalAkhir;
+        document.getElementById("kembalian").value = formatRupiah(kembalian);
+
+        let warningText = document.getElementById("warningText");
+        let submitButton = document.querySelector("button[type='submit']");
+
+        if (totalBayar < totalAkhir) {
+            warningText.style.display = "block"; // Show warning
+            submitButton.disabled = true; // Disable submit button
+        } else {
+            warningText.style.display = "none"; // Hide warning
+            submitButton.disabled = false; // Enable submit button
+        }
+    }
+
+    function formatRupiah(angka) {
+        let numberString = angka.toString().replace(/\D/g, "");
+        let formatted = numberString.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return "Rp. " + formatted;
+    }
+</script>
+
+<script>
     $(document).ready(function() {
         $('.single-select').select2({
             theme: 'bootstrap-5',
@@ -112,86 +205,26 @@
             placeholder: "Pilih Member"
         });
 
-        $('#searchBarang').select2({
-            theme: 'bootstrap-5',
-            width: '100%',
-            placeholder: "Cari Barang"
-        });
+        $('.single-select').on('select2:select', function(e) {
+            let selectedOption = e.params.data.element;
+            let tipeMember = $(selectedOption).attr("data-type");
 
-        $('#searchBarang').on('change', function() {
-            let selectedOption = $(this).find(':selected');
-            let barangId = selectedOption.val();
-            let barangNama = selectedOption.data('nama');
-            let barangKode = selectedOption.data('kode');
-            let stok = selectedOption.data('stok');
+            console.log("Tipe Member Terpilih:", tipeMember); // Debugging
 
-            let tipeMember = $("#id_member").find(':selected').data('type');
-            let harga = selectedOption.data('harga' + tipeMember);
-
-            if (!barangId) return;
-
-            if ($("#barangList tr[data-id='" + barangId + "']").length) {
-                Swal.fire({
-                    icon: "warning",
-                    title: "Barang sudah dipilih!",
-                    text: "Silakan tambahkan jumlahnya langsung di tabel."
+            if (tipeMember) {
+                $("#tipe_member").val(tipeMember);
+                $(".harga-barang").each(function() {
+                    let harga = $(this).attr("data-harga" + tipeMember);
+                    $(this).text(formatRupiah(harga));
                 });
-                return;
+                hitungTotal();
+            } else {
+                console.warn("Tipe Member tidak ditemukan!");
             }
-
-            let newRow = `
-                <tr data-id="${barangId}">
-                    <td>${barangKode} - ${barangNama}</td>
-                    <td>${stok}</td>
-                    <td class="harga-barang" data-harga="${harga}">${formatRupiah(harga)}</td>
-                    <td>
-                        <input type="number" name="jumlah[${barangId}]" class="form-control jumlah" min="1" max="${stok}" value="1">
-                    </td>
-                    <td class="total-harga">${formatRupiah(harga)}</td>
-                    <td>
-                        <button type="button" class="btn btn-danger btn-sm remove-barang">Hapus</button>
-                    </td>
-                </tr>
-            `;
-
-            $("#barangList").append(newRow);
-            hitungTotal();
         });
-
-        $(document).on("input", ".jumlah", function() {
-            hitungTotal();
-        });
-
-        $(document).on("click", ".remove-barang", function() {
-            $(this).closest("tr").remove();
-            hitungTotal();
-        });
-
-        function hitungTotal() {
-            let total = 0;
-            $("#barangList tr").each(function() {
-                let harga = parseInt($(this).find(".harga-barang").data("harga")) || 0;
-                let jumlah = parseInt($(this).find(".jumlah").val()) || 0;
-                let subtotal = harga * jumlah;
-                $(this).find(".total-harga").text(formatRupiah(subtotal));
-                total += subtotal;
-            });
-
-            let ppn = Math.floor(total * 0.12);
-            let totalSetelahPajak = total + ppn;
-            let diskon = Math.floor((totalSetelahPajak * ($("#diskon").val() || 0)) / 100);
-            let totalAkhir = totalSetelahPajak - diskon;
-
-            $("#totalSebelumPajak").val(formatRupiah(total));
-            $("#ppn").val(formatRupiah(ppn));
-            $("#totalSetelahPajak").val(formatRupiah(totalSetelahPajak));
-            $("#totalAkhir").val(formatRupiah(totalAkhir));
-        }
-
-        function formatRupiah(angka) {
-            return "Rp. " + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        }
     });
 </script>
+
+
 
 <?= $this->include('admin/templates/footer') ?>
