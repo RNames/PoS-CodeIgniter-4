@@ -45,7 +45,6 @@ class Loginctrl extends BaseController
                     'logged_in' => TRUE
                 ]);
 
-                // ✅ Simpan log login
                 $this->logsModel->save([
                     'id_petugas' => $dataUser->id,
                     'action' => 'login',

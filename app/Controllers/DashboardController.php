@@ -12,6 +12,6 @@ class DashboardController extends BaseController
 {
     public function index()
     {
-        return view('nembak');
+        return redirect()->back();
     }
 }

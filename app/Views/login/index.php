@@ -28,7 +28,7 @@
             height: 100%;
             z-index: -1;
             overflow: hidden;
-        }	
+        }
 
         .bg-slider img {
             width: 100%;
@@ -48,7 +48,8 @@
         .login-container {
             height: 100%;
             display: flex;
-            justify-content: center; /* Center the form horizontally */
+            justify-content: center;
+            /* Center the form horizontally */
             align-items: center;
             padding: 30px;
             position: relative;
@@ -60,7 +61,8 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            background-color: rgba(255, 255, 255, 0.85); /* Slight transparency for an elegant effect */
+            background-color: rgba(255, 255, 255, 0.85);
+            /* Slight transparency for an elegant effect */
         }
 
         .form-label {
@@ -75,7 +77,8 @@
         .logo {
             display: block;
             margin: 0 auto 15px auto;
-            width: 95px; /* Adjust the width as needed */
+            width: 95px;
+            /* Adjust the width as needed */
         }
     </style>
 </head>
@@ -93,7 +96,11 @@
     <!-- Login Form -->
     <div class="login-container">
         <div class="card">
-		<img loading="lazy" class="logo" src="<?= base_url('assets/images/YPE-LOGO-BLUE-GOLD-SMALL.png'); ?>" alt="logo" style="width: 95px;">
+            <?php if (session()->getFlashdata('error')) : ?>
+                <div class="alert alert-danger text-center">
+                    <?= session()->getFlashdata('error') ?>
+                </div>
+            <?php endif; ?>
             <h3 class="text-center mb-5">Login to Kasiran</h3>
             <form class="auth-form login-form" method="post" action="<?= base_url('login/process'); ?>">
                 <?= csrf_field(); ?>

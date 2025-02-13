@@ -19,9 +19,14 @@ class SetMemberController extends BaseController
 
     public function index()
     {
-        $data['members'] = $this->memberModel->findAll();
-        return view('admin/member/index', $data);
+        $members = $this->memberModel
+            ->orderBy("FIELD(tipe_member, 3) DESC") // Tipe member 3 selalu di atas
+            ->orderBy("nm_member", "ASC") // Urutkan berdasarkan nama
+            ->findAll();
+
+        return view('admin/member/index', ['members' => $members]);
     }
+
 
     public function create()
     {

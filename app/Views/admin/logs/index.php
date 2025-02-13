@@ -36,6 +36,13 @@
         </tbody>
     </table>
 
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination justify-content-center" id="pagination">
+            <!-- Pagination Buttons -->
+        </ul>
+    </nav>
+
     <!-- Select2 & AJAX -->
     <script>
         $(document).ready(function() {
@@ -45,17 +52,22 @@
                 placeholder: "Filter Logs",
             });
 
-            function loadLogs(filters) {
+            let currentPage = 1;
+            let perPage = 10;
+
+            function loadLogs(filters, page = 1) {
                 $.ajax({
                     url: "<?= base_url('owner/logs/getFilteredLogs') ?>",
                     type: "GET",
                     data: {
-                        filter: filters
+                        filter: filters,
+                        page: page,
+                        perPage: perPage
                     },
                     dataType: "json",
                     success: function(response) {
                         let tableBody = "";
-                        response.forEach((log, index) => {
+                        response.logs.forEach((log, index) => {
                             let actionColors = {
                                 'login': 'bg-primary text-white',
                                 'logout': 'bg-secondary text-white',
@@ -68,7 +80,7 @@
 
                             tableBody += `
                             <tr>
-                                <td>${index + 1}</td>
+                                <td>${(page - 1) * perPage + index + 1}</td>
                                 <td>${log.nm_petugas}</td>
                                 <td class="text-center">
                                     <span class="badge ${bgClass}" style="font-size:14px">${log.action.charAt(0).toUpperCase() + log.action.slice(1)}</span>
@@ -85,16 +97,43 @@
                         });
 
                         $("#log-table-body").html(tableBody);
+                        renderPagination(response.totalPages, page);
                     }
                 });
             }
 
+            function renderPagination(totalPages, currentPage) {
+                let paginationHtml = "";
+
+                for (let i = 1; i <= totalPages; i++) {
+                    let activeClass = i === currentPage ? "active" : "";
+                    paginationHtml += `
+                        <li class="page-item ${activeClass}">
+                            <a class="page-link" href="#" data-page="${i}">${i}</a>
+                        </li>
+                    `;
+                }
+
+                $("#pagination").html(paginationHtml);
+            }
+
             // Load logs pertama kali
-            loadLogs($('#filter-select').val());
+            loadLogs($('#filter-select').val(), currentPage);
 
             // Auto update saat filter diubah
             $('#filter-select').on('change', function() {
-                loadLogs($(this).val());
+                currentPage = 1;
+                loadLogs($(this).val(), currentPage);
+            });
+
+            // Pagination click event
+            $(document).on("click", ".page-link", function(e) {
+                e.preventDefault();
+                let page = $(this).data("page");
+                if (page) {
+                    currentPage = page;
+                    loadLogs($('#filter-select').val(), currentPage);
+                }
             });
         });
     </script>

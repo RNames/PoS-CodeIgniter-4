@@ -21,21 +21,28 @@ class LogsController extends BaseController
 
     public function getFilteredLogs()
     {
-        $filter = $this->request->getGet('filter'); // Ambil filter dari GET parameter
-        $query = $this->logsModel
-            ->select('logs.*, petugas.nm_petugas')
-            ->join('petugas', 'petugas.id = logs.id_petugas')
+        $filter = $this->request->getGet('filter');
+        $page = (int) $this->request->getGet('page') ?: 1;
+        $perPage = (int) $this->request->getGet('perPage') ?: 10;
+        $offset = ($page - 1) * $perPage;
+
+        $query = $this->logsModel->select('logs.*, petugas.nm_petugas')
+            ->join('petugas', 'logs.id_petugas = petugas.id')
             ->orderBy('logs.time', 'DESC');
 
         if (!empty($filter)) {
-            $filterArray = is_array($filter) ? $filter : explode(',', $filter);
-            $query->whereIn('logs.action', $filterArray);
+            $query->whereIn('logs.action', $filter);
         }
 
-        $logs = $query->findAll();
+        $totalLogs = $query->countAllResults(false);
+        $logs = $query->limit($perPage, $offset)->findAll();
 
-        return $this->response->setJSON($logs); // Kembalikan data sebagai JSON untuk AJAX
+        return $this->response->setJSON([
+            'logs' => $logs,
+            'totalPages' => ceil($totalLogs / $perPage)
+        ]);
     }
+
 
     public function detail($id)
     {

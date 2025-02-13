@@ -7,7 +7,6 @@
     <table class="table">
 
         <tr>
-            <th class="text-center">ID</th>
             <th>Nama</th>
             <th>Email</th>
             <th class="text-center">No HP</th>
@@ -19,7 +18,6 @@
         <tbody>
             <?php foreach ($members as $m) : ?>
                 <tr>
-                    <td class="text-center"><?= esc($m['id']) ?></td>
                     <td><?= esc($m['nm_member']) ?></td>
                     <td><?= esc($m['email']) ?></td>
                     <td class="text-center"><?= esc($m['no_hp']) ?></td>

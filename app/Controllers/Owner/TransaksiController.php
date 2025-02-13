@@ -40,17 +40,23 @@ class TransaksiController extends BaseController
 
         $total_belanja = 0;
         $detailTransaksi = [];
+        $barangUpdates = []; // Untuk update stok
 
         foreach ($barangList as $id_barang => $jumlah) {
             $barang = $barangModel->find($id_barang);
             if (!$barang || $jumlah <= 0) continue;
+
+            // ✅ Cek stok tersedia
+            if ($barang['stok'] < $jumlah) {
+                return redirect()->back()->with('error', "Stok tidak cukup untuk {$barang['nama_barang']} (tersedia: {$barang['stok']})");
+            }
 
             $harga_column = 'harga_jual_' . $tipe_member;
             if (!isset($barang[$harga_column])) {
                 return redirect()->back()->with('error', "Harga untuk tipe member $tipe_member tidak ditemukan.");
             }
 
-            $harga = floor($barang[$harga_column]); // Membulatkan harga ke bawah
+            $harga = floor($barang[$harga_column]);
             $total_harga = $harga * $jumlah;
 
             $detailTransaksi[] = [
@@ -61,6 +67,9 @@ class TransaksiController extends BaseController
             ];
 
             $total_belanja += $total_harga;
+
+            // ✅ Siapkan update stok
+            $barangUpdates[$id_barang] = $barang['stok'] - $jumlah;
         }
 
         $ppn = floor($total_belanja * 0.12);
@@ -69,13 +78,11 @@ class TransaksiController extends BaseController
         $total_akhir = floor($total_setelah_ppn - $jumlah_diskon);
         $total_kembalian = floor($total_bayar - $total_akhir);
 
-        // ✅ Hitung Poin (Hanya untuk Tipe 1 dan 2)
         $poin = 0;
         if ($tipe_member == 1 || $tipe_member == 2) {
-            $poin = floor($total_belanja * 0.02); // 2% dari total sebelum pajak & diskon
+            $poin = floor($total_belanja * 0.02);
         }
 
-        // ✅ Simpan transaksi tanpa `id_detail_laporan` dulu
         $transaksiData = [
             'id_detail_laporan' => 0,
             'id_petugas' => session()->get('id'),
@@ -83,7 +90,7 @@ class TransaksiController extends BaseController
             'tipe_member' => $tipe_member,
             'total_belanja' => $total_belanja,
             'diskon' => $diskon,
-            'poin_didapat' => $poin, // ✅ Simpan poin ke database
+            'poin_didapat' => $poin,
             'total_akhir' => $total_akhir,
             'total_bayar' => $total_bayar,
             'total_kembalian' => $total_kembalian,
@@ -98,11 +105,11 @@ class TransaksiController extends BaseController
             $detailModel->insert($detail);
         }
 
-        // ✅ Update `id_detail_laporan` dengan ID yang benar
-        $detail_id = $detailModel->getInsertID();
-        $transaksiModel->update($transaksi_id, ['id_detail_laporan' => $detail_id]);
+        // ✅ Update stok barang
+        foreach ($barangUpdates as $id_barang => $newStock) {
+            $barangModel->update($id_barang, ['stok' => $newStock]);
+        }
 
-        // ✅ Update Poin Member
         if ($poin > 0) {
             $member = $memberModel->find($id_member);
             if ($member) {
