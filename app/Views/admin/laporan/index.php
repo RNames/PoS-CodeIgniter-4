@@ -29,6 +29,7 @@
                 <th>Tipe Pelanggan</th>
                 <th>Total Pembelanjaan</th>
                 <th>Diskon</th>
+                <th>PPN (12%)</th>
                 <th>Poin Didapat</th>
                 <th>Total Akhir</th>
             </tr>
@@ -36,7 +37,7 @@
         <tbody>
             <?php if (empty($laporan)) : ?>
                 <tr>
-                    <td colspan="9">Tidak ada transaksi dalam rentang waktu yang dipilih.</td>
+                    <td colspan="12">Tidak ada transaksi dalam rentang waktu yang dipilih.</td>
                 </tr>
             <?php else : ?>
                 <?php $no = 1; ?>
@@ -48,7 +49,8 @@
                         <td><?= esc($row['nama_member']); ?></td>
                         <td><?= esc($row['tipe_member']); ?></td>
                         <td>Rp. <?= number_format($row['total_belanja'], 0, ',', '.'); ?></td>
-                        <td>Rp. <?= number_format($row['diskon'], 0, ',', '.'); ?></td>
+                        <td>- Rp. <?= number_format($row['diskon_rp'], 0, ',', '.'); ?></td>
+                        <td>+ Rp. <?= number_format($row['ppn'], 0, ',', '.'); ?></td>
                         <td><?= esc($row['poin_didapat']); ?></td>
                         <td>Rp. <?= number_format($row['total_akhir'], 0, ',', '.'); ?></td>
                     </tr>
@@ -56,6 +58,7 @@
             <?php endif; ?>
         </tbody>
     </table>
+
 </div>
 
 <?= $this->include('admin/templates/footer') ?>

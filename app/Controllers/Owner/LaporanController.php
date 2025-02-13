@@ -26,16 +26,21 @@ class LaporanController extends BaseController
         $startDate = $this->request->getGet('start_date');
         $endDate = $this->request->getGet('end_date');
 
-        // Query dasar dengan join untuk mendapatkan nama kasir dan pelanggan
+        // Query dasar dengan join untuk mendapatkan nama kasir, pelanggan, diskon dalam rupiah, dan PPN
         $query = $this->transaksiModel
-            ->select('laporan.*, petugas.nm_petugas as nama_kasir, member.nm_member as nama_member')
+            ->select('laporan.*, 
+                  petugas.nm_petugas as nama_kasir, 
+                  member.nm_member as nama_member, 
+                  (laporan.total_belanja * (laporan.diskon / 100)) as diskon_rp,
+                  (laporan.total_belanja * 0.12) as ppn,
+                  (laporan.total_belanja + (laporan.total_belanja * 0.12)) as total_setelah_ppn')
             ->join('petugas', 'petugas.id = laporan.id_petugas')
             ->join('member', 'member.id = laporan.id_member');
 
         // Filter berdasarkan tanggal jika diberikan
         if (!empty($startDate) && !empty($endDate)) {
             $query->where('tanggal_transaksi >=', $startDate)
-                  ->where('tanggal_transaksi <=', $endDate);
+                ->where('tanggal_transaksi <=', $endDate);
         }
 
         $laporan = $query->findAll();

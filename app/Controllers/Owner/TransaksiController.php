@@ -63,16 +63,25 @@ class TransaksiController extends BaseController
             $total_belanja += $total_harga;
         }
 
-        $ppn = floor($total_belanja * 0.12);
-        $total_setelah_ppn = floor($total_belanja + $ppn);
-        $jumlah_diskon = floor(($diskon / 100) * $total_setelah_ppn);
-        $total_akhir = floor($total_setelah_ppn - $jumlah_diskon);
-        $total_kembalian = floor($total_bayar - $total_akhir);
+        // ✅ 1. Hitung Diskon (dalam Rupiah)
+        $jumlah_diskon = floor(($diskon / 100) * $total_belanja);
 
-        // ✅ Hitung Poin (Hanya untuk Tipe 1 dan 2)
+        // ✅ 2. Hitung Subtotal Setelah Diskon
+        $subtotal = $total_belanja - $jumlah_diskon;
+
+        // ✅ 3. Hitung PPN (12% dari subtotal)
+        $ppn = floor($subtotal * 0.12);
+
+        // ✅ 4. Hitung Total Akhir (Subtotal + PPN)
+        $total_akhir = $subtotal + $ppn;
+
+        // ✅ 5. Hitung Kembalian
+        $total_kembalian = $total_bayar - $total_akhir;
+
+        // ✅ 6. Hitung Poin (Hanya untuk Tipe 1 dan 2)
         $poin = 0;
         if ($tipe_member == 1 || $tipe_member == 2) {
-            $poin = floor($total_belanja * 0.02); // 2% dari total sebelum pajak & diskon
+            $poin = floor($total_belanja * 0.02); // 2% dari total sebelum diskon & pajak
         }
 
         // ✅ Simpan transaksi tanpa id_detail_laporan dulu
@@ -83,6 +92,8 @@ class TransaksiController extends BaseController
             'tipe_member' => $tipe_member,
             'total_belanja' => $total_belanja,
             'diskon' => $diskon,
+            'diskon_rp' => $jumlah_diskon, // ✅ Simpan diskon dalam rupiah
+            'ppn' => $ppn, // ✅ Simpan PPN
             'poin_didapat' => $poin, // ✅ Simpan poin ke database
             'total_akhir' => $total_akhir,
             'total_bayar' => $total_bayar,
