@@ -189,7 +189,7 @@ class TransaksiController extends BaseController
             return redirect()->to(base_url('owner/transaksi'))->with('error', 'Transaksi tidak ditemukan.');
         }
 
-        $details = $detailModel->where('id_laporan', $id)->findAll();
+        $details = $detailModel->getDetailWithBarang($id);
         $member = $memberModel->find($transaksi['id_member']);
 
         $data = [

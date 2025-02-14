@@ -14,4 +14,13 @@ class DetailTransaksiModel extends Model
     {
         return $this->insert($data);
     }
+
+    public function getDetailWithBarang($id_transaksi)
+{
+    return $this->select('detail_laporan.*, barang.nama_barang')
+        ->join('barang', 'barang.kode_barang = detail_laporan.barang_id', 'left')
+        ->where('detail_laporan.id_laporan', $id_transaksi)
+        ->findAll();
+}
+
 }
