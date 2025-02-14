@@ -123,6 +123,39 @@ class TransaksiController extends BaseController
             }
         }
 
+        foreach ($detailTransaksi as $detail) {
+            $id_barang = $detail['barang_id'];
+            $jumlah_dibeli = $detail['jumlah'];
+
+            // ✅ Ambil data barang berdasarkan ID
+            $barangData = $barangModel->find($id_barang);
+            if (!$barangData) continue; // ✅ Jika barang tidak ditemukan, skip transaksi ini
+
+            $stokModel = new \App\Models\StokModel();
+            $stokList = $stokModel->where('kode_barang', $barangData['kode_barang']) // ✅ Gunakan kode_barang yang benar
+                ->where('stok >', 0)
+                ->orderBy('tanggal_beli', 'ASC')
+                ->findAll();
+
+            foreach ($stokList as $stok) {
+                if ($jumlah_dibeli <= 0) break;
+
+                if ($stok['stok'] >= $jumlah_dibeli) {
+                    // Jika stok cukup, langsung kurangi
+                    $stokModel->update($stok['id'], [
+                        'stok' => $stok['stok'] - $jumlah_dibeli
+                    ]);
+                    break;
+                } else {
+                    // Jika stok tidak cukup, habiskan stok ini, lanjut ke stok berikutnya
+                    $jumlah_dibeli -= $stok['stok'];
+                    $stokModel->update($stok['id'], [
+                        'stok' => 0
+                    ]);
+                }
+            }
+        }
+
         return redirect()->to(base_url('owner/transaksi'))->with('success', 'Transaksi berhasil disimpan. Poin bertambah: ' . number_format($poin, 0));
     }
 }
