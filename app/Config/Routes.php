@@ -67,8 +67,13 @@ $routes->group('owner', ['filter' => 'role:owner'], function ($routes) {
     //Transaksi
     $routes->get('transaksi', 'Owner\TransaksiController::index');
     $routes->post('transaksi/proses', 'Owner\TransaksiController::proses');
+    $routes->get('transaksi/cetak_nota/(:num)', 'Owner\TransaksiController::cetak_nota/$1');
+
    
-    $routes->get('transaksi/laporan', 'Owner\LaporanController::index');
+    $routes->get('laporan', 'Owner\LaporanController::index');
+    $routes->get('laporan/detail/(:num)', 'Owner\LaporanController::detail/$1');
+    
+
 
 });
 

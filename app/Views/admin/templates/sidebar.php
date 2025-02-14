@@ -53,7 +53,7 @@
         <div id="collapse3" class="collapse" aria-labelledby="heading3" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="<?= base_url('owner/transaksi') ?>">Transaksi Jual</a>
-                <a class="collapse-item" href="<?= base_url('owner/transaksi/laporan') ?>">Laporan Penjualan</a>
+                <a class="collapse-item" href="<?= base_url('owner/laporan') ?>">Laporan Penjualan</a>
             </div>
         </div>
     </li>
