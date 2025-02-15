@@ -163,7 +163,7 @@
                     ${formatRupiah(harga)}
                 </td>
                 <td>
-                    <input type="number" name="jumlah[${barangID}]" class="form-control jumlah" min="1" max="${stok}" value="1">
+                    <input type="number" name="jumlah[${barangID}]" class="form-control jumlah" min="0" max="${stok}" value="0">
                 </td>
                 <td class="total-harga">${formatRupiah(harga)}</td>
                 <td><button type="button" class="btn btn-danger btn-sm hapus-barang" data-id="${barangID}">Hapus</button></td>
@@ -176,12 +176,28 @@
 
         $(document).on("input", ".jumlah", function() {
             let row = $(this).closest("tr");
-            let harga = parseInt(row.find(".harga-barang").data("harga")) || 0;
+            let stok = parseInt(row.find(".stok-barang").text()) || 0;
             let jumlah = parseInt($(this).val()) || 0;
+
+            if (jumlah < 0) {
+                $(this).val(0);
+                jumlah = 0;
+            } else if (jumlah > stok) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Stok Tidak Cukup!',
+                    text: 'Jumlah yang dimasukkan melebihi stok tersedia!',
+                });
+                $(this).val(stok);
+                jumlah = stok;
+            }
+
+            let harga = parseInt(row.find(".harga-barang").data("harga")) || 0;
             row.find(".total-harga").text(formatRupiah(harga * jumlah));
 
             hitungTotal();
         });
+
 
         $(document).on("click", ".hapus-barang", function() {
             let barangID = $(this).data("id");

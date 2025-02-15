@@ -65,28 +65,40 @@
             font-size: 14px;
             cursor: pointer;
         }
+
+        @media print {
+            .btn-print {
+                display: none;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            @page {
+                margin: 0;
+            }
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <p class="right"><?= date('d/m/Y, h:i A') ?></p>
-        <p class="right">Kasir Dashboard</p>
-        <h2 class="left">Nota Transaksi</h2>
+        <h2>Nota Transaksi</h2>
         <p><strong>Kode Transaksi:</strong> <?= $transaksi['kode_transaksi'] ?></p>
+        <p><?= date('d/m/Y, h:i A') ?></p>
         <hr>
 
         <p class="info"><strong>Pelanggan:</strong> <?= $member ? $member['nm_member'] : 'Umum' ?></p>
-        <p class="info"><strong>Tanggal:</strong> <?= date('Y-m-d H:i:s', strtotime($transaksi['tanggal_transaksi'])) ?></p>
-
+        <p class="info"><strong>Tanggal:</strong> <?= date('Y-m-d H:i:s', strtotime($transaksi['tanggal_transaksi'])) ?> </p>
+        <hr>
         <table class="items">
             <tbody>
                 <?php foreach ($details as $item) : ?>
                     <tr>
                         <td><?= isset($item['nama_barang']) ? $item['nama_barang'] : 'Barang Tidak Ditemukan' ?></td>
                         <td class="right">Rp <?= number_format($item['harga'], 0, ',', '.') ?></td>
-                    </tr>
-                    <tr>
                         <td></td>
                         <td class="right">x<?= $item['jumlah'] ?> &nbsp; Rp <?= number_format($item['total_harga'], 0, ',', '.') ?></td>
                     </tr>
@@ -100,9 +112,9 @@
         <p class="summary"><strong>Total Akhir (PPN 12%):</strong> <span class="right">Rp <?= number_format($transaksi['total_akhir'], 0, ',', '.') ?></span></p>
         <p class="summary"><strong>Uang Dibayar:</strong> <span class="right">Rp <?= number_format($transaksi['total_bayar'], 0, ',', '.') ?></span></p>
         <p class="summary"><strong>Kembalian:</strong> <span class="right">Rp <?= number_format($transaksi['total_kembalian'], 0, ',', '.') ?></span></p>
-
-        <button class="btn-print" onclick="window.print()">Cetak</button>
     </div>
+
+    <button class="btn-print" onclick="window.print()">Cetak</button>
 </body>
 
 </html>

@@ -12,7 +12,8 @@ class StokModel extends Model
         'kode_barang',
         'stok',
         'tanggal_beli',
-        'tanggal_expired'
+        'tanggal_expired',
+        'status',
     ];
 
     public function getTotalStok($kode_barang)
