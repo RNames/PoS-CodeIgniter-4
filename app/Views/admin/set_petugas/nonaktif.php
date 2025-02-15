@@ -1,9 +1,7 @@
 <?= $this->include('admin/templates/header') ?>
 <?= $this->include('admin/templates/sidebar') ?>
-
 <div class="container">
-    <h2>Daftar Petugas Aktif</h2>
-    <a style="margin-bottom: 10px;" href="<?= base_url('owner/petugas/create') ?>" class="btn btn-primary">Tambah Petugas</a>
+    <h3>Daftar Petugas Nonaktif</h3>
     <table class="table text-center">
         <thead>
             <tr>
@@ -15,48 +13,43 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($activePetugas as $p) : ?>
+            <?php foreach ($inactivePetugas as $p) : ?>
                 <tr>
                     <td><?= $p->id ?></td>
                     <td><?= $p->nm_petugas ?></td>
                     <td><?= $p->email ?></td>
                     <td><?= $p->roles ?></td>
                     <td>
-                        <a href="<?= base_url('owner/petugas/edit/' . $p->id) ?>" class="btn btn-warning">
-                            <i class='fas fa-edit' style='font-size:20px'></i> Edit
-                        </a>
-                        <button class="deleteBtn btn btn-danger" data-id="<?= $p->id ?>">
-                            <i class='fas fa-power-off' style='font-size:20px'></i> Nonaktifkan
+                        <button class="restoreBtn btn btn-success" data-id="<?= $p->id ?>">
+                            <i class='fas fa-undo' style='font-size:20px'></i> Aktifkan
                         </button>
                     </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
-
 </div>
 
 <script>
-    // Konfirmasi sebelum menonaktifkan petugas (soft delete)
-    document.querySelectorAll('.deleteBtn').forEach(button => {
+    // Konfirmasi sebelum memulihkan petugas
+    document.querySelectorAll('.restoreBtn').forEach(button => {
         button.addEventListener('click', function() {
             let petugasId = this.getAttribute('data-id');
             Swal.fire({
                 title: "Konfirmasi",
-                text: "Apakah Anda yakin ingin menonaktifkan petugas ini?",
-                icon: "warning",
+                text: "Apakah Anda yakin ingin memulihkan petugas ini?",
+                icon: "info",
                 showCancelButton: true,
-                confirmButtonColor: "#d33",
+                confirmButtonColor: "#28a745",
                 cancelButtonColor: "#3085d6",
-                confirmButtonText: "Ya, Nonaktifkan!",
+                confirmButtonText: "Ya, Pulihkan!",
                 cancelButtonText: "Batal"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "<?= base_url('owner/petugas/delete/') ?>" + petugasId;
+                    window.location.href = "<?= base_url('owner/petugas/restore/') ?>" + petugasId;
                 }
             });
         });
     });
 </script>
-
 <?= $this->include('admin/templates/footer') ?>

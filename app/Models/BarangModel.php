@@ -20,7 +20,8 @@ class BarangModel extends Model
         'harga_jual_3',
         'stok',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'status',
     ];
 
     public function generateIdBarang()

@@ -8,7 +8,7 @@
     <form method="get" action="<?= base_url('owner/logs') ?>" class="mb-3" id="filter-form">
         <select class="form-select" id="filter-select" name="filter[]" multiple data-placeholder="Filter Logs">
             <?php
-            $actions = ['login' => 'Login', 'logout' => 'Logout', 'tambah' => 'Tambah', 'edit' => 'Edit', 'hapus' => 'Hapus'];
+            $actions = ['login' => 'Login', 'logout' => 'Logout', 'tambah' => 'Tambah', 'edit' => 'Edit', 'hapus' => 'Hapus', 'restore' => 'Restore'];
             $selectedFilters = isset($_GET['filter']) ? $_GET['filter'] : [];
 
             foreach ($actions as $key => $label) {
@@ -73,7 +73,8 @@
                                 'logout': 'bg-secondary text-white',
                                 'tambah': 'bg-success text-white',
                                 'edit': 'bg-warning text-dark',
-                                'hapus': 'bg-danger text-white'
+                                'hapus': 'bg-danger text-white',
+                                'restore': 'bg-info text-white',
                             };
                             let bgClass = actionColors[log.action] || 'bg-light';
                             let shortMsg = log.msg.split('<br>')[0];

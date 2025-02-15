@@ -61,20 +61,32 @@
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
 
-
     <li class="nav-item active">
-        <a class="nav-link" href="<?= base_url('owner/petugas') ?>">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse4" aria-expanded="true" aria-controls="collapse4">
             <i class="fas fa-fw fa-cogs"></i>
             <span>Pengaturan Petugas</span>
         </a>
+        <div id="collapse4" class="collapse" aria-labelledby="heading4" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="<?= base_url('owner/petugas') ?>">Petugas Aktif</a>
+                <a class="collapse-item" href="<?= base_url('owner/petugas/nonaktif') ?>">Petugas Nonaktif</a>
+            </div>
+        </div>
     </li>
 
     <li class="nav-item active">
-        <a class="nav-link" href="<?= base_url('owner/member') ?>">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse5" aria-expanded="true" aria-controls="collapse5">
             <i class="fas fa-fw fa-cogs"></i>
             <span>Pengaturan Member</span>
         </a>
+        <div id="collapse5" class="collapse" aria-labelledby="heading5" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="<?= base_url('owner/member') ?>">Member Aktif</a>
+                <a class="collapse-item" href="<?= base_url('owner/member/nonaktif') ?>">Member Nonaktif</a>
+            </div>
+        </div>
     </li>
+
 
     <!-- Divider -->
     <hr class="sidebar-divider my-0">

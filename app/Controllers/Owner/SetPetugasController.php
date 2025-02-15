@@ -19,14 +19,37 @@ class SetPetugasController extends BaseController
         $this->tokoModel = new TokoModel();
         $this->logsModel = new LogsModel();
     }
-
     public function index()
     {
+        $petugasModel = new PetugasModel();
+
+        // Ambil hanya petugas aktif (status = 1) dan roles = petugas
+        $activePetugas = $petugasModel->where('status', 1)->where('roles', 'petugas')->findAll();
+
+        // Ambil hanya petugas nonaktif (status = 0) dan roles = petugas
+        $inactivePetugas = $petugasModel->where('status', 0)->where('roles', 'petugas')->findAll();
+
         $data = [
-            'petugas' => $this->petugasModel->getPetugas(),
-            'toko' => $this->tokoModel->first()
+            'activePetugas'   => $activePetugas,
+            'inactivePetugas' => $inactivePetugas
         ];
+
+        // You can conditionally load this based on the request or provide links to both active and inactive views
         return view('admin/set_petugas/index', $data);
+    }
+
+    public function nonaktif()
+    {
+        $petugasModel = new PetugasModel();
+
+        // Ambil hanya petugas nonaktif (status = 0) dan roles = petugas
+        $inactivePetugas = $petugasModel->where('status', 0)->where('roles', 'petugas')->findAll();
+
+        $data = [
+            'inactivePetugas' => $inactivePetugas
+        ];
+
+        return view('admin/set_petugas/nonaktif', $data);
     }
 
     public function create()
@@ -134,22 +157,49 @@ class SetPetugasController extends BaseController
             return redirect()->to(base_url('owner/petugas'))->with('error', 'Petugas tidak ditemukan!');
         }
 
+        // Simpan data lama untuk log
         $oldData = [
             'nm_petugas' => $petugas->nm_petugas,
             'email'      => $petugas->email
         ];
 
-        $this->petugasModel->delete($id);
+        // Soft delete: Update status menjadi 0
+        $this->petugasModel->update($id, ['status' => 0]);
 
+        // Simpan log penghapusan
         $this->logsModel->save([
             'id_petugas' => session()->get('id'),
             'action'     => 'hapus',
-            'msg'        => 'Menghapus petugas: ' . $petugas->nm_petugas,
+            'msg'        => 'Menonaktifkan petugas: ' . $petugas->nm_petugas,
             'old_data'   => json_encode($oldData),
-            'new_data'   => null,
+            'new_data'   => json_encode(['status' => 0]),
             'time'       => date('Y-m-d H:i:s')
         ]);
 
-        return redirect()->to(base_url('owner/petugas'))->with('success', 'Petugas berhasil dihapus!');
+        return redirect()->to(base_url('owner/petugas'))->with('success', 'Petugas berhasil dinonaktifkan!');
+    }
+
+    public function restore($id)
+    {
+        $petugas = $this->petugasModel->find($id);
+
+        if (!$petugas) {
+            return redirect()->to(base_url('owner/petugas'))->with('error', 'Petugas tidak ditemukan!');
+        }
+
+        // Update status menjadi 1 (aktif kembali)
+        $this->petugasModel->update($id, ['status' => 1]);
+
+        // Simpan log pemulihan
+        $this->logsModel->save([
+            'id_petugas' => session()->get('id'),
+            'action'     => 'restore',
+            'msg'        => 'Mengaktifkan kembali petugas: ' . $petugas->nm_petugas,
+            'old_data'   => json_encode(['status' => 0]),
+            'new_data'   => json_encode(['status' => 1]),
+            'time'       => date('Y-m-d H:i:s')
+        ]);
+
+        return redirect()->to(base_url('owner/petugas/nonaktif'))->with('success', 'Petugas berhasil diaktifkan kembali!');
     }
 }

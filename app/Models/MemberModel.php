@@ -16,6 +16,13 @@ class MemberModel extends Model
         'poin',
         'tipe_member',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'status',
     ]; // Kolom yang bisa diisi
+
+    // Soft delete function (set status to 0)
+    public function softDelete($id)
+    {
+        return $this->update($id, ['status' => 0]);
+    }
 }

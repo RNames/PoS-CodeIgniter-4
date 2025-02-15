@@ -20,12 +20,14 @@ class SetMemberController extends BaseController
     public function index()
     {
         $members = $this->memberModel
+            ->where('status', 1) // Only active members
             ->orderBy("FIELD(tipe_member, 3) DESC") // Tipe member 3 selalu di atas
             ->orderBy("nm_member", "ASC") // Urutkan berdasarkan nama
             ->findAll();
 
         return view('admin/member/index', ['members' => $members]);
     }
+
 
 
     public function create()
@@ -131,17 +133,54 @@ class SetMemberController extends BaseController
             return redirect()->to(base_url('owner/member'))->with('error', 'Member tidak ditemukan!');
         }
 
-        $this->memberModel->delete($id);
+        // Soft delete the member
+        $this->memberModel->softDelete($id);
 
+        // Log the action
         $this->logsModel->save([
             'id_petugas' => $id_petugas,
-            'action'     => 'hapus',
-            'msg'        => "Menghapus member ID: $id",
+            'action'     => 'soft-delete',
+            'msg'        => "Menonaktifkan member ID: $id",
             'old_data'   => json_encode($member),
             'new_data'   => null,
             'time'       => date('Y-m-d H:i:s'),
         ]);
 
-        return redirect()->to(base_url('owner/member'))->with('success', 'Member berhasil dihapus!');
+        return redirect()->to(base_url('owner/member'))->with('success', 'Member berhasil dinonaktifkan!');
+    }
+
+    public function nonaktif()
+    {
+        $members = $this->memberModel
+            ->where('status', 0) // Fetch only inactive members
+            ->orderBy("FIELD(tipe_member, 3) DESC") // Tipe member 3 selalu di atas
+            ->orderBy("nm_member", "ASC") // Urutkan berdasarkan nama
+            ->findAll();
+
+        return view('admin/member/nonaktif', ['members' => $members]);
+    }
+
+    public function restore($id)
+    {
+        $id_petugas = session()->get('id');
+        $member = $this->memberModel->find($id);
+        if (!$member) {
+            return redirect()->to(base_url('owner/member/nonaktif'))->with('error', 'Member tidak ditemukan!');
+        }
+
+        // Restore the member (set status back to 1)
+        $this->memberModel->update($id, ['status' => 1]);
+
+        // Log the action
+        $this->logsModel->save([
+            'id_petugas' => $id_petugas,
+            'action'     => 'restore',
+            'msg'        => "Mengaktifkan kembali member ID: $id",
+            'old_data'   => json_encode($member),
+            'new_data'   => null,
+            'time'       => date('Y-m-d H:i:s'),
+        ]);
+
+        return redirect()->to(base_url('owner/member/nonaktif'))->with('success', 'Member berhasil diaktifkan kembali!');
     }
 }

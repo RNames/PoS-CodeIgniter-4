@@ -30,6 +30,9 @@ $routes->group('owner', ['filter' => 'role:owner'], function ($routes) {
     $routes->get('petugas/edit/(:num)', 'Owner\SetPetugasController::edit/$1');
     $routes->post('petugas/update/(:num)', 'Owner\SetPetugasController::update/$1');
     $routes->get('petugas/delete/(:num)', 'Owner\SetPetugasController::delete/$1');
+    $routes->get('petugas/nonaktif', 'Owner\SetPetugasController::nonaktif');
+    $routes->get('petugas/restore/(:num)', 'Owner\SetPetugasController::restore/$1');
+
 
     //Member
     $routes->get('member', 'Owner\SetMemberController::index');
@@ -39,6 +42,9 @@ $routes->group('owner', ['filter' => 'role:owner'], function ($routes) {
     $routes->post('member/update/(:num)', 'Owner\SetMemberController::update/$1');
     $routes->get('member/delete/(:num)', 'Owner\SetMemberController::delete/$1');
     $routes->get('member/detail/(:num)', 'Owner\SetMemberController::detail/$1');
+    $routes->get('member/nonaktif', 'Owner\SetMemberController::nonaktif');
+    $routes->get('member/restore/(:num)', 'Owner\SetMemberController::restore/$1');
+
 
     //Barang
     $routes->get('barang', 'Owner\BarangController::index');
@@ -69,12 +75,9 @@ $routes->group('owner', ['filter' => 'role:owner'], function ($routes) {
     $routes->post('transaksi/proses', 'Owner\TransaksiController::proses');
     $routes->get('transaksi/cetak_nota/(:num)', 'Owner\TransaksiController::cetak_nota/$1');
 
-   
+
     $routes->get('laporan', 'Owner\LaporanController::index');
     $routes->get('laporan/detail/(:num)', 'Owner\LaporanController::detail/$1');
-    
-
-
 });
 
 // **GROUP PETUGAS**

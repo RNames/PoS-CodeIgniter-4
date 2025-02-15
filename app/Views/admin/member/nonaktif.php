@@ -2,8 +2,8 @@
 <?= $this->include('admin/templates/sidebar') ?>
 
 <div class="container">
-    <h2>Daftar Member Aktif</h2>
-    <a style="margin-bottom: 10px;" href="<?= base_url('owner/member/create') ?>" class="btn btn-primary">Tambah Member</a>
+    <h2>Daftar Member Nonaktif</h2>
+    <a style="margin-bottom: 10px;" href="<?= base_url('owner/member') ?>" class="btn btn-secondary">Kembali ke Member Aktif</a>
     <table class="table">
 
         <tr>
@@ -27,11 +27,8 @@
                         <a href="<?= base_url('owner/member/detail/' . $m['id']) ?>" class="btn btn-info">
                             <i class='fas fa-eye' style='font-size:20px'></i> Detail
                         </a>
-                        <a href="<?= base_url('owner/member/edit/' . $m['id']) ?>" class="btn btn-warning">
-                            <i class='fas fa-edit' style='font-size:20px'></i> Edit
-                        </a>
-                        <button class="deleteBtn btn btn-danger" data-id="<?= $m['id'] ?>">
-                            <i class='fas fa-power-off' style='font-size:20px'></i> Nonaktifkan
+                        <button class="restoreBtn btn btn-success" data-id="<?= $m['id'] ?>">
+                            <i class='fas fa-undo' style='font-size:20px'></i> Aktifkan
                         </button>
                     </td>
                 </tr>
@@ -41,21 +38,21 @@
 </div>
 
 <script>
-    document.querySelectorAll('.deleteBtn').forEach(button => {
+    document.querySelectorAll('.restoreBtn').forEach(button => {
         button.addEventListener('click', function() {
             let memberId = this.getAttribute('data-id');
             Swal.fire({
                 title: "Konfirmasi",
-                text: "Apakah Anda yakin ingin menghapus data ini?",
+                text: "Apakah Anda yakin ingin mengaktifkan kembali member ini?",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Ya, Hapus!",
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, Aktifkan!",
                 cancelButtonText: "Batal"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "<?= base_url('owner/member/delete/') ?>" + memberId;
+                    window.location.href = "<?= base_url('owner/member/restore/') ?>" + memberId;
                 }
             });
         });
