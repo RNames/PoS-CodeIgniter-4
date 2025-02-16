@@ -1,7 +1,7 @@
 <?= $this->include('admin/templates/header') ?>
 <?= $this->include('admin/templates/sidebar') ?>
 
-<div class="container">
+<div class="container p-5 pt-4 pb-4 mb-3 mr-5 bg-white border rounded">
     <h2>Daftar Petugas Aktif</h2>
     <div class="d-flex gap-2 mb-4">
         <a href="<?= base_url('owner/pengaturan-petugas/create') ?>" class="btn btn-primary">Tambah Petugas</a>

@@ -1,7 +1,9 @@
 <?= $this->include('admin/templates/header') ?>
 <?= $this->include('admin/templates/sidebar') ?>
-<div class="container">
+
+<div class="container p-5 pt-4 pb-4 mb-3 mr-5 bg-white border rounded">
     <h3>Daftar Petugas Nonaktif</h3>
+    <a style="margin-bottom: 10px;" href="<?= base_url('owner/pengaturan-petugas') ?>" class="btn btn-secondary">Kembali ke Petugas Aktif</a>
     <table class="table text-center">
         <thead>
             <tr>

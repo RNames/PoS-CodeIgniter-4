@@ -37,7 +37,6 @@
 
 
         <table class="table mt-3 text-centered">
-            <thead>
                 <tr>
                     <th>Kode Transaksi</th>
                     <th>Tanggal</th>
@@ -46,7 +45,6 @@
                     <th>Total Akhir</th>
                     <th>Aksi</th>
                 </tr>
-            </thead>
             <tbody>
                 <?php foreach ($laporan as $row) : ?>
                     <tr>
@@ -56,8 +54,8 @@
                         <td><?= esc($row['nama_member']) ?> (Tipe <?= esc($row['tipe_member']) ?>)</td>
                         <td>Rp <?= number_format($row['total_akhir'], 0, ',', '.') ?></td>
                         <td>
-                            <a href="<?= base_url('owner/laporan/detail/' . $row['id']) ?>" class="btn btn-info btn-sm">
-                                <i class="fa fa-eye"></i> Detail
+                            <a href="<?= base_url('owner/laporan/detail/' . $row['id']) ?>" class="btn btn-primary btn-sm">
+                                <i class="fa fa-info-circle"></i> Detail
                             </a>
                         </td>
                     </tr>

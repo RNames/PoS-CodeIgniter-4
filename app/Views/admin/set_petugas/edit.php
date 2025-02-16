@@ -7,16 +7,28 @@
     </div>
 <?php endif; ?>
 
-<div class="container">
-    <h2>Edit Petugas</h2>
-    <form action="<?= base_url('owner/pengaturan-petugas/update/' . $petugas->id) ?>" method="post" onsubmit="return validatePasswords()">
-        <div class="form-group">
-            <label>Nama</label>
-            <input type="text" name="nm_petugas" class="form-control" value="<?= $petugas->nm_petugas ?>" required>
+<div class="container p-5 pt-4 pb-4 mb-3 mr-5 bg-white border rounded">
+
+    <div class="row">
+        <div class="col-2">
+            <a href="<?= base_url('owner/pengaturan-petugas') ?>" class="btn btn-secondary"><i class="fas fa-fw fa-angle-left"></i>Kembali</a>
         </div>
-        <div class="form-group">
-            <label>Email</label>
-            <input type="email" name="email" class="form-control" value="<?= $petugas->email ?>" required>
+        <div class="col-8">
+            <h2 class="text-center">Edit Petugas</h2>
+        </div>
+    </div>
+
+    <form action="<?= base_url('owner/pengaturan-petugas/update/' . $petugas->id) ?>" method="post" onsubmit="return validatePasswords()">
+
+        <div class="row">
+            <div class="form-group col">
+                <label>Nama</label>
+                <input type="text" name="nm_petugas" class="form-control" value="<?= $petugas->nm_petugas ?>" required>
+            </div>
+            <div class="form-group col">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control" value="<?= $petugas->email ?>" required>
+            </div>
         </div>
         <div class="form-group position-relative">
             <label>Password (Kosongkan jika tidak ingin mengubah)</label>
@@ -44,7 +56,7 @@
             </div>
             <small id="confirmMessage" class="text-muted">Pastikan konfirmasi password cocok.</small>
         </div>
-        <button type="submit" class="btn btn-success">Update</button>
+        <button type="submit" class="btn btn-block btn-success">Update</button>
     </form>
 </div>
 
@@ -73,7 +85,7 @@
     function togglePassword(fieldId, iconId) {
         let passwordField = document.getElementById(fieldId);
         let icon = document.getElementById(iconId);
-        
+
         if (passwordField.type === "password") {
             passwordField.type = "text";
             icon.classList.remove("bi-eye");
@@ -112,8 +124,14 @@
 </script>
 
 <style>
-    .valid { color: green;}
-    .invalid { color: red; font-weight: bold; }
+    .valid {
+        color: green;
+    }
+
+    .invalid {
+        color: red;
+        font-weight: bold;
+    }
 </style>
 
 <?= $this->include('admin/templates/footer') ?>

@@ -26,7 +26,6 @@
 
     <h3 class="mt-4">Detail Stok</h3>
     <table class="table text-center">
-        <thead>
             <tr>
                 <th>ID Stok</th>
                 <th>Tanggal Beli</th>
@@ -34,7 +33,6 @@
                 <th>Jumlah Stok</th>
                 <th>Aksi</th>
             </tr>
-        </thead>
         <tbody>
             <?php if (empty($stokBarang)) : ?>
                 <tr>
