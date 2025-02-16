@@ -9,7 +9,7 @@
 
 <div class="container">
     <h2>Tambah Petugas</h2>
-    <form action="<?= base_url('owner/petugas/store') ?>" method="post" onsubmit="return validatePasswords()">
+    <form action="<?= base_url('owner/pengaturan-petugas/store') ?>" method="post" onsubmit="return validatePasswords()">
         <div class="form-group">
             <label>Nama</label>
             <input type="text" name="nm_petugas" class="form-control" required>

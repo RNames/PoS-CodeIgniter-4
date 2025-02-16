@@ -37,7 +37,7 @@
     <!-- Nav Item - Data Produk -->
     <li class="nav-item active">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-            <i class="fas fa-fw fa-database"></i>
+            <i class="fas fa-fw fa-box"></i>
             <span>Data Produk</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -70,8 +70,8 @@
         </a>
         <div id="collapse4" class="collapse" aria-labelledby="heading4" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="<?= base_url('owner/petugas') ?>">Petugas Aktif</a>
-                <a class="collapse-item" href="<?= base_url('owner/petugas/nonaktif') ?>">Petugas Nonaktif</a>
+                <a class="collapse-item" href="<?= base_url('owner/pengaturan-petugas') ?>">Petugas Aktif</a>
+                <a class="collapse-item" href="<?= base_url('owner/pengaturan-petugas/nonaktif') ?>">Petugas Nonaktif</a>
             </div>
         </div>
     </li>
@@ -83,12 +83,11 @@
         </a>
         <div id="collapse5" class="collapse" aria-labelledby="heading5" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="<?= base_url('owner/member') ?>">Member Aktif</a>
-                <a class="collapse-item" href="<?= base_url('owner/member/nonaktif') ?>">Member Nonaktif</a>
+                <a class="collapse-item" href="<?= base_url('owner/pengaturan-member') ?>">Member Aktif</a>
+                <a class="collapse-item" href="<?= base_url('owner/pengaturan-member/nonaktif') ?>">Member Nonaktif</a>
             </div>
         </div>
     </li>
-
 
     <li class="nav-item active">
         <a class="nav-link" href="<?= base_url('logout') ?>">
@@ -98,7 +97,7 @@
     </li>
 
     <!-- Divider -->
-    <hr class="sidebar-divider my-0">
+    <hr class="sidebar-divider my-0 mb-3">
 
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
@@ -123,12 +122,11 @@
             </button>
 
             <!-- Store Name and Address -->
-            <h5 class="d-lg-block d-none mt-2">
+            <h2 class="d-lg-block d-none mt-2">
                 <b>
-                    <?= isset($toko['nama_toko']) ? esc($toko['nama_toko']) : 'Default Store Name'; ?>,
-                    <?= isset($toko['alamat_toko']) ? esc($toko['alamat_toko']) : 'Default Address'; ?>
+                    <?= ucfirst(str_replace('-', ' ', service('uri')->getSegment(2) ?? 'Dashboard')); ?>
                 </b>
-            </h5>
+            </h2>
 
             <!-- Topbar Navbar -->
             <ul class="navbar-nav ml-auto">

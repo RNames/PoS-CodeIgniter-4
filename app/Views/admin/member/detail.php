@@ -35,10 +35,10 @@
                     <td><?= esc($member['tipe_member']) ?></td>
                 </tr>
             </table>
-            <a href="<?= base_url('owner/member') ?>" class="btn btn-secondary">
+            <a href="<?= base_url('owner/pengaturan-member') ?>" class="btn btn-secondary">
                 Kembali
             </a>
-            <a href="<?= base_url('owner/member/edit/' . $member['id']) ?>" class="btn btn-warning">
+            <a href="<?= base_url('owner/pengaturan-member/edit/' . $member['id']) ?>" class="btn btn-warning">
                 Edit
             </a>
             <button class="deleteBtn btn btn-danger" data-id="<?= $member['id'] ?>">
@@ -63,7 +63,7 @@
                 cancelButtonText: "Batal"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "<?= base_url('owner/member/delete/') ?>" + memberId;
+                    window.location.href = "<?= base_url('owner/pengaturan-member/delete/') ?>" + memberId;
                 }
             });
         });

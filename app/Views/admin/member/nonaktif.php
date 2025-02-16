@@ -3,7 +3,7 @@
 
 <div class="container">
     <h2>Daftar Member Nonaktif</h2>
-    <a style="margin-bottom: 10px;" href="<?= base_url('owner/member') ?>" class="btn btn-secondary">Kembali ke Member Aktif</a>
+    <a style="margin-bottom: 10px;" href="<?= base_url('owner/pengaturan-member') ?>" class="btn btn-secondary">Kembali ke Member Aktif</a>
     <table class="table">
 
         <tr>
@@ -49,7 +49,7 @@
                 cancelButtonText: "Batal"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "<?= base_url('owner/member/restore/') ?>" + memberId;
+                    window.location.href = "<?= base_url('owner/pengaturan-member/restore/') ?>" + memberId;
                 }
             });
         });

@@ -1,8 +1,7 @@
 <?= $this->include('admin/templates/header') ?>
 <?= $this->include('admin/templates/sidebar') ?>
 
-<div class="container">
-    <h2>Log Aktivitas</h2>
+<div class="container p-5 mb-3 mr-5 bg-white border rounded">
 
     <!-- Filter Form -->
     <form method="get" action="<?= base_url('owner/logs') ?>" class="mb-3" id="filter-form">

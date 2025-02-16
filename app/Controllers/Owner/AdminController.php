@@ -22,29 +22,26 @@ class AdminController extends Controller
         $tokoModel = new TokoModel();
         $petugasModel = new PetugasModel();
 
-        // Get the current admin session data
+
         $id = session()->get('id');
-        // Fetch member profile
+
         $hasil_profil = $id ? $petugasModel->find($id) : null;
 
-        // Fetch all barang with total stok
         $barang_data = $barangModel->getBarangWithTotalStok();
 
-        // Filter barang where total_stok is less than minimal_stok
         $low_stock = array_filter($barang_data, function ($barang) {
             return $barang['total_stok'] < $barang['minimal_stok'];
         });
 
-        // Fetch dashboard data
         $data = [
-            'low_stock' => $low_stock,  // Use the filtered low_stock data
+            'low_stock' => $low_stock,
             'total_barang' => $barangModel->countAllResults(),
             'total_stok' => array_sum(array_column($barang_data, 'total_stok')),
             'total_penjualan' => $detailTransaksiModel->selectSum('jumlah')->get()->getRow()->jumlah,
             'total_kategori' => $kategoriModel->countAllResults(),
             'toko' => $tokoModel->first(),
             'hasil_profil' => $hasil_profil,
-            'barang_data' => $barang_data,  // Pass the barang data with total_stok
+            'barang_data' => $barang_data, 
         ];
 
         // Get sales data for the last 7 days

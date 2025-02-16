@@ -1,18 +1,26 @@
 <?= $this->include('admin/templates/header') ?>
 <?= $this->include('admin/templates/sidebar') ?>
 
-<div class="container">
-    <h2>Detail Barang</h2>
-    <a href="<?= base_url('owner/barang') ?>" class="btn btn-secondary">Kembali</a>
+<div class="container p-5 pt-4 pb-4 mb-3 mr-5 bg-white border rounded">
+    <div class="row">
+        <div class="col-2">
+            <a href="<?= base_url('owner/barang') ?>" class="btn btn-secondary"><i class="fas fa-fw fa-angle-left"></i>Kembali</a>
+        </div>
+        <div class="col-8">
+            <h2 class="text-center">Detail Barang</h2>
+        </div>
+    </div>
 
     <div class="card mt-3">
         <div class="card-body">
-            <h5 class="card-title"><?= esc($barang['nama_barang']); ?></h5>
-            <p><strong>Kategori:</strong> <?= esc($barang['nama_kategori']); ?></p>
-            <p><strong>Harga Beli:</strong> Rp. <?= number_format($barang['harga_beli'], 0, ',', '.'); ?></p>
-            <p><strong>Harga Jual 1:</strong> Rp. <?= number_format($barang['harga_jual_1'], 0, ',', '.'); ?></p>
-            <p><strong>Harga Jual 2:</strong> Rp. <?= number_format($barang['harga_jual_2'], 0, ',', '.'); ?></p>
-            <p><strong>Harga Jual 3:</strong> Rp. <?= number_format($barang['harga_jual_3'], 0, ',', '.'); ?></p>
+            <h5 class="card-title mb-2">Nama Barang : <?= esc($barang['nama_barang']); ?></h5>
+            <p><strong>Kode Barang :</strong> <?= esc($barang['kode_barang']); ?></p>
+            <p><strong>Kategori :</strong> <?= esc($barang['nama_kategori']); ?></p>
+            <p><strong>Harga Beli :</strong> Rp. <?= number_format($barang['harga_beli'], 0, ',', '.'); ?></p>
+            <p><strong>Harga Jual 1 :</strong> Rp. <?= number_format($barang['harga_jual_1'], 0, ',', '.'); ?></p>
+            <p><strong>Harga Jual 2 :</strong> Rp. <?= number_format($barang['harga_jual_2'], 0, ',', '.'); ?></p>
+            <p><strong>Harga Jual 3 :</strong> Rp. <?= number_format($barang['harga_jual_3'], 0, ',', '.'); ?></p>
+            <p><strong>Minimal Stok :</strong> <?= esc($barang['minimal_stok']); ?></p>
         </div>
     </div>
 

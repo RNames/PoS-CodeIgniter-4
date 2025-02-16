@@ -4,8 +4,8 @@
 <div class="container">
     <h2>Daftar Member</h2>
     <div class="d-flex gap-2 mb-4">
-        <a href="<?= base_url('owner/member/create') ?>" class="btn btn-primary">Tambah Member</a>
-        <a href="<?= base_url('owner/member/nonaktif') ?>" class="btn btn-secondary">Lihat Member Nonaktif</a>
+        <a href="<?= base_url('owner/pengaturan-member/create') ?>" class="btn btn-primary">Tambah Member</a>
+        <a href="<?= base_url('owner/pengaturan-member/nonaktif') ?>" class="btn btn-secondary">Lihat Member Nonaktif</a>
     </div>
     <table class="table">
 
@@ -27,10 +27,10 @@
                     <td class="text-center"><?= esc($m['poin']) ?></td>
                     <td class="text-center"><?= esc($m['tipe_member']) ?></td>
                     <td class="text-center">
-                        <a href="<?= base_url('owner/member/detail/' . $m['id']) ?>" class="btn btn-info">
+                        <a href="<?= base_url('owner/pengaturan-member/detail/' . $m['id']) ?>" class="btn btn-info">
                             <i class='fas fa-eye' style='font-size:20px'></i> Detail
                         </a>
-                        <a href="<?= base_url('owner/member/edit/' . $m['id']) ?>" class="btn btn-warning">
+                        <a href="<?= base_url('owner/pengaturan-member/edit/' . $m['id']) ?>" class="btn btn-warning">
                             <i class='fas fa-edit' style='font-size:20px'></i> Edit
                         </a>
                         <button class="deleteBtn btn btn-danger" data-id="<?= $m['id'] ?>">
@@ -58,7 +58,7 @@
                 cancelButtonText: "Batal"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "<?= base_url('owner/member/delete/') ?>" + memberId;
+                    window.location.href = "<?= base_url('owner/pengaturan-member/delete/') ?>" + memberId;
                 }
             });
         });

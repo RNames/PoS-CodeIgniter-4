@@ -22,25 +22,25 @@ $routes->group('owner', ['filter' => 'role:owner'], function ($routes) {
     $routes->get('logs/getFilteredLogs', 'LogsController::getFilteredLogs');
 
     //Petugas
-    $routes->get('petugas', 'Owner\SetPetugasController::index');
-    $routes->get('petugas/create', 'Owner\SetPetugasController::create');
-    $routes->post('petugas/store', 'Owner\SetPetugasController::store');
-    $routes->get('petugas/edit/(:num)', 'Owner\SetPetugasController::edit/$1');
-    $routes->post('petugas/update/(:num)', 'Owner\SetPetugasController::update/$1');
-    $routes->get('petugas/delete/(:num)', 'Owner\SetPetugasController::delete/$1');
-    $routes->get('petugas/nonaktif', 'Owner\SetPetugasController::nonaktif');
-    $routes->get('petugas/restore/(:num)', 'Owner\SetPetugasController::restore/$1');
+    $routes->get('pengaturan-petugas', 'Owner\SetPetugasController::index');
+    $routes->get('pengaturan-petugas/create', 'Owner\SetPetugasController::create');
+    $routes->post('pengaturan-petugas/store', 'Owner\SetPetugasController::store');
+    $routes->get('pengaturan-petugas/edit/(:num)', 'Owner\SetPetugasController::edit/$1');
+    $routes->post('pengaturan-petugas/update/(:num)', 'Owner\SetPetugasController::update/$1');
+    $routes->get('pengaturan-petugas/delete/(:num)', 'Owner\SetPetugasController::delete/$1');
+    $routes->get('pengaturan-petugas/nonaktif', 'Owner\SetPetugasController::nonaktif');
+    $routes->get('pengaturan-petugas/restore/(:num)', 'Owner\SetPetugasController::restore/$1');
 
     //Member
-    $routes->get('member', 'Owner\SetMemberController::index');
-    $routes->get('member/create', 'Owner\SetMemberController::create');
-    $routes->post('member/store', 'Owner\SetMemberController::store');
-    $routes->get('member/edit/(:num)', 'Owner\SetMemberController::edit/$1');
-    $routes->post('member/update/(:num)', 'Owner\SetMemberController::update/$1');
-    $routes->get('member/delete/(:num)', 'Owner\SetMemberController::delete/$1');
-    $routes->get('member/detail/(:num)', 'Owner\SetMemberController::detail/$1');
-    $routes->get('member/nonaktif', 'Owner\SetMemberController::nonaktif');
-    $routes->get('member/restore/(:num)', 'Owner\SetMemberController::restore/$1');
+    $routes->get('pengaturan-member', 'Owner\SetMemberController::index');
+    $routes->get('pengaturan-member/create', 'Owner\SetMemberController::create');
+    $routes->post('pengaturan-member/store', 'Owner\SetMemberController::store');
+    $routes->get('pengaturan-member/edit/(:num)', 'Owner\SetMemberController::edit/$1');
+    $routes->post('pengaturan-member/update/(:num)', 'Owner\SetMemberController::update/$1');
+    $routes->get('pengaturan-member/delete/(:num)', 'Owner\SetMemberController::delete/$1');
+    $routes->get('pengaturan-member/detail/(:num)', 'Owner\SetMemberController::detail/$1');
+    $routes->get('pengaturan-member/nonaktif', 'Owner\SetMemberController::nonaktif');
+    $routes->get('pengaturan-member/restore/(:num)', 'Owner\SetMemberController::restore/$1');
 
     //Barang
     $routes->get('barang', 'Owner\BarangController::index');

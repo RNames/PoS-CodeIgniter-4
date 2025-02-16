@@ -1,115 +1,119 @@
 <?= $this->include('admin/templates/header') ?>
 <?= $this->include('admin/templates/sidebar') ?>
 
-<div class="container">
-    <h2>Transaksi</h2>
+<div class="container p-5 pt-4 mb-3 mr-5 bg-white border rounded">
     <form id="transaksiForm" action="<?= base_url('owner/transaksi/proses') ?>" method="post">
         <input type="hidden" name="tipe_member" id="tipe_member">
 
-        <div class="form-group">
-            <label>Pilih Member</label>
-            <select name="id_member" id="id_member" class="form-select" required>
-                <option value="" disabled selected>-- Pilih Member --</option>
-                <optgroup label="Non Member">
-                    <?php foreach ($members as $member) : ?>
-                        <?php if ($member['tipe_member'] == 3) : ?>
-                            <option value="<?= $member['id'] ?>" data-type="<?= $member['tipe_member'] ?>">
-                                Tipe <?= $member['tipe_member'] ?> | <?= $member['nm_member'] ?>
-                            </option>
-                        <?php endif; ?>
+        <div class="form-group container mb-4 row row-cols-2 g-3">
+            <div class="form-group col">
+                <label>Pilih Member</label>
+                <select name="id_member" id="id_member" class="form-select" required>
+                    <option value="" disabled selected>-- Pilih Member --</option>
+                    <optgroup label="Non Member">
+                        <?php foreach ($members as $member) : ?>
+                            <?php if ($member['tipe_member'] == 3) : ?>
+                                <option value="<?= $member['id'] ?>" data-type="<?= $member['tipe_member'] ?>">
+                                    Tipe <?= $member['tipe_member'] ?> | <?= $member['nm_member'] ?>
+                                </option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </optgroup>
+                    <optgroup label="Member 1 & 2">
+                        <?php foreach ($members as $member) : ?>
+                            <?php if ($member['tipe_member'] != 3) : ?>
+                                <option value="<?= $member['id'] ?>" data-type="<?= $member['tipe_member'] ?>">
+                                    Tipe <?= $member['tipe_member'] ?> | <?= $member['nm_member'] ?>
+                                </option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Pilih Barang</label>
+                <select id="pilihBarang" class="form-select">
+                    <option value="" disabled selected>-- Pilih Barang --</option>
+                    <?php foreach ($barangs as $barang) : ?>
+                        <option value="<?= $barang['id'] ?>"
+                            data-nama="<?= $barang['nama_barang'] ?>"
+                            data-stok="<?= $barang['total_stok'] ?>"
+                            data-harga1="<?= $barang['harga_jual_1'] ?>"
+                            data-harga2="<?= $barang['harga_jual_2'] ?>"
+                            data-harga3="<?= $barang['harga_jual_3'] ?>">
+                            <?= $barang['nama_barang'] ?> (Stok: <?= $barang['total_stok'] ?>)
+                        </option>
                     <?php endforeach; ?>
-                </optgroup>
-                <optgroup label="Member 1 & 2">
-                    <?php foreach ($members as $member) : ?>
-                        <?php if ($member['tipe_member'] != 3) : ?>
-                            <option value="<?= $member['id'] ?>" data-type="<?= $member['tipe_member'] ?>">
-                                Tipe <?= $member['tipe_member'] ?> | <?= $member['nm_member'] ?>
-                            </option>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </optgroup>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Pilih Barang</label>
-            <select id="pilihBarang" class="form-select">
-                <option value="" disabled selected>-- Pilih Barang --</option>
-                <?php foreach ($barangs as $barang) : ?>
-                    <option value="<?= $barang['id'] ?>"
-                        data-nama="<?= $barang['nama_barang'] ?>"
-                        data-stok="<?= $barang['total_stok'] ?>"
-                        data-harga1="<?= $barang['harga_jual_1'] ?>"
-                        data-harga2="<?= $barang['harga_jual_2'] ?>"
-                        data-harga3="<?= $barang['harga_jual_3'] ?>">
-                        <?= $barang['nama_barang'] ?> (Stok: <?= $barang['total_stok'] ?>)
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-
-
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Nama Barang</th>
-                    <th>Stok</th>
-                    <th>Harga</th>
-                    <th>Jumlah</th>
-                    <th>Total</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody id="barangList">
-                <!-- Barang yang dipilih akan ditambahkan di sini -->
-            </tbody>
-        </table>
-
-
-        <div class="form-group">
-            <label>Total Harga Barang</label>
-            <input type="text" id="totalHargaBarang" class="form-control" readonly>
-        </div>
-
-        <div class="form-group">
-            <label>Diskon (%)</label>
-            <input type="number" name="diskon" id="diskon" class="form-control" min="0" max="100" value="0">
-        </div>
-
-        <div class="form-group">
-            <label>Diskon (Rp)</label>
-            <input type="text" id="diskonRupiah" class="form-control" readonly>
-        </div>
-
-        <div class="form-group">
-            <label>Total Setelah Diskon</label>
-            <input type="text" id="totalSetelahDiskon" class="form-control" readonly>
-        </div>
-
-        <div class="form-group">
-            <label>PPN (12%)</label>
-            <input type="text" id="ppn" class="form-control" readonly>
-        </div>
-
-        <div class="form-group">
-            <label>Total Akhir</label>
-            <input type="text" id="totalAkhir" class="form-control" readonly>
-        </div>
-
-        <div class="form-group">
-            <label>Bayar</label>
-            <input type="number" name="total_bayar" id="totalBayar" class="form-control" required>
-            <div id="warningText" style="color: red; font-weight: bold; display: none;">
-                Uang masih kurang!
+                </select>
             </div>
         </div>
 
-        <div class="form-group">
-            <label>Kembalian</label>
-            <input type="text" id="kembalian" class="form-control" readonly>
+        <div class="container row">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nama Barang</th>
+                        <th>Stok</th>
+                        <th>Harga</th>
+                        <th>Jumlah</th>
+                        <th>Total</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="barangList">
+                    <!-- Barang yang dipilih akan ditambahkan di sini -->
+                </tbody>
+            </table>
         </div>
 
-        <button type="button" id="btnSimpanTransaksi" class="btn btn-success">Simpan Transaksi</button>
+            <div class="container mt-4 mb-4 row row-cols-2 g-3">
+                <div class="form-group col">
+                    <label>Diskon (%)</label>
+                    <input type="number" name="diskon" id="diskon" class="form-control" min="0" max="100" value="0">
+                </div>
+
+                <div class="form-group col">
+                    <label>Total Harga Barang</label>
+                    <input type="text" id="totalHargaBarang" class="form-control" readonly>
+                </div>
+
+                <div class="form-group col">
+                    <label>Diskon (Rp)</label>
+                    <input type="text" id="diskonRupiah" class="form-control" readonly>
+                </div>
+
+                <div class="form-group col">
+                    <label>Total Setelah Diskon</label>
+                    <input type="text" id="totalSetelahDiskon" class="form-control" readonly>
+                </div>
+
+                <div class="form-group col">
+                    <label>PPN (12%)</label>
+                    <input type="text" id="ppn" class="form-control" readonly>
+                </div>
+
+                <div class="form-group col">
+                    <label>Total Akhir</label>
+                    <input type="text" id="totalAkhir" class="form-control" readonly>
+                </div>
+
+                <div class="form-group col">
+                    <label>Bayar</label>
+                    <input type="number" name="total_bayar" id="totalBayar" class="form-control" required>
+                    <div id="warningText" style="color: red; font-weight: bold; display: none;">
+                        Uang masih kurang!
+                    </div>
+                </div>
+
+                <div class="form-group col">
+                    <label>Kembalian</label>
+                    <input type="text" id="kembalian" class="form-control" readonly>
+                </div>
+
+            </div>
+
+            <button type="button" id="btnSimpanTransaksi" class="btn btn-success btn-block">Simpan Transaksi</button>
 
     </form>
 </div>
@@ -141,6 +145,48 @@
 
             hitungTotal();
         });
+
+        $(document).ready(function() {
+            $("#btnSimpanTransaksi").on("click", function(e) {
+                let totalBayar = parseInt($("#totalBayar").val()) || 0;
+                let totalAkhir = parseInt($("#totalAkhir").val().replace(/\D/g, "")) || 0;
+                let jumlahBarang = $("#barangList tr").length;
+
+                if (jumlahBarang === 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Harap pilih minimal satu barang sebelum menyimpan transaksi!',
+                    });
+                    return;
+                }
+
+                if (totalBayar < totalAkhir) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Uang yang dibayarkan kurang!',
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'Konfirmasi Transaksi',
+                    text: "Apakah Anda yakin ingin menyelesaikan transaksi ini?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#28a745',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Selesaikan!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $("#transaksiForm").submit();
+                    }
+                });
+            });
+        });
+
 
         $("#pilihBarang").on("change", function() {
             let selected = $(this).find(":selected");

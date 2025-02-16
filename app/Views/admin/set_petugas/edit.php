@@ -9,7 +9,7 @@
 
 <div class="container">
     <h2>Edit Petugas</h2>
-    <form action="<?= base_url('owner/petugas/update/' . $petugas->id) ?>" method="post" onsubmit="return validatePasswords()">
+    <form action="<?= base_url('owner/pengaturan-petugas/update/' . $petugas->id) ?>" method="post" onsubmit="return validatePasswords()">
         <div class="form-group">
             <label>Nama</label>
             <input type="text" name="nm_petugas" class="form-control" value="<?= $petugas->nm_petugas ?>" required>

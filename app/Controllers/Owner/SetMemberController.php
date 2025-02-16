@@ -73,7 +73,7 @@ class SetMemberController extends BaseController
             'time'       => date('Y-m-d H:i:s'),
         ]);
 
-        return redirect()->to(base_url('owner/member'))->with('success', 'Member berhasil ditambahkan!');
+        return redirect()->to(base_url('owner/pengaturan-member'))->with('success', 'Member berhasil ditambahkan!');
     }
 
     public function edit($id)
@@ -112,14 +112,14 @@ class SetMemberController extends BaseController
             ]);
         }
 
-        return redirect()->to(base_url('owner/member'))->with('success', 'Member berhasil diperbarui!');
+        return redirect()->to(base_url('owner/pengaturan-member'))->with('success', 'Member berhasil diperbarui!');
     }
 
     public function detail($id)
     {
         $member = $this->memberModel->find($id);
         if (!$member) {
-            return redirect()->to(base_url('owner/member'))->with('error', 'Member tidak ditemukan!');
+            return redirect()->to(base_url('owner/pengaturan-member'))->with('error', 'Member tidak ditemukan!');
         }
         return view('admin/member/detail', ['member' => $member]);
     }
@@ -129,7 +129,7 @@ class SetMemberController extends BaseController
         $id_petugas = session()->get('id');
         $member = $this->memberModel->find($id);
         if (!$member) {
-            return redirect()->to(base_url('owner/member'))->with('error', 'Member tidak ditemukan!');
+            return redirect()->to(base_url('owner/pengaturan-member'))->with('error', 'Member tidak ditemukan!');
         }
 
         $this->memberModel->update($id, ['deleted_at' => date('Y-m-d H:i:s')]);
@@ -144,7 +144,7 @@ class SetMemberController extends BaseController
             'time'       => date('Y-m-d H:i:s'),
         ]);
 
-        return redirect()->to(base_url('owner/member'))->with('success', 'Member berhasil dinonaktifkan!');
+        return redirect()->to(base_url('owner/pengaturan-member'))->with('success', 'Member berhasil dinonaktifkan!');
     }
 
 
@@ -166,7 +166,7 @@ class SetMemberController extends BaseController
         $member = $this->memberModel->onlyDeleted()->find($id);
 
         if (!$member) {
-            return redirect()->to(base_url('owner/member/nonaktif'))->with('error', 'Member tidak ditemukan!');
+            return redirect()->to(base_url('owner/pengaturan-member/nonaktif'))->with('error', 'Member tidak ditemukan!');
         }
 
         // Pastikan member yang di-restore adalah member yang benar-benar dihapus
@@ -184,9 +184,9 @@ class SetMemberController extends BaseController
                 'time'       => date('Y-m-d H:i:s'),
             ]);
 
-            return redirect()->to(base_url('owner/member/nonaktif'))->with('success', 'Member berhasil diaktifkan kembali!');
+            return redirect()->to(base_url('owner/pengaturan-member/nonaktif'))->with('success', 'Member berhasil diaktifkan kembali!');
         } else {
-            return redirect()->to(base_url('owner/member/nonaktif'))->with('error', 'Member sudah aktif!');
+            return redirect()->to(base_url('owner/pengaturan-member/nonaktif'))->with('error', 'Member sudah aktif!');
         }
     }
 }

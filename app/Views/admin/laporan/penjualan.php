@@ -2,21 +2,22 @@
 <?= $this->include('admin/templates/sidebar') ?>
 
 <div class="container mt-4">
-    <h3>Laporan Penjualan</h3>
+    <h2><?= isset($date) ? 'Laporan Penjualan untuk Tanggal: ' . $date : 'Laporan Penjualan' ?></h2>
 
     <div class="container mt-4 mb-4">
         <form action="<?= site_url('owner/laporan/penjualan') ?>" method="get" class="row g-3">
-            <div class="col-md-3">
-                <label for="date">Pilih Tanggal</label>
-                <input type="date" id="date" name="date" class="form-control" value="<?= isset($date) ? $date : '' ?>">
-            </div>
 
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <label for="kode_transaksi">Cari Kode Transaksi</label>
                 <input type="text" id="kode_transaksi" name="kode_transaksi" class="form-control" value="<?= isset($kodeTransaksi) ? $kodeTransaksi : '' ?>" placeholder="Kode Transaksi">
             </div>
 
-            <div class="col-md-3 align-self-end d-flex gap-2">
+            <div class="col-md-6">
+                <label for="date">Pilih Tanggal</label>
+                <input type="date" id="date" name="date" class="form-control" value="<?= isset($date) ? $date : '' ?>">
+            </div>
+
+            <div class="col-md-6 align-self-end d-flex gap-2">
                 <button type="submit" class="btn btn-primary">Filter</button>
                 <a href="<?= base_url('owner/laporan/penjualan') ?>" class="btn btn-secondary">Reset</a>
                 <a href="<?= base_url('owner/laporan/export_pdf?date=' . $date . '&kode_transaksi=' . $kodeTransaksi) ?>" class="btn btn-danger">Export ke PDF</a>
@@ -24,17 +25,16 @@
         </form>
     </div>
 
-    <h4><?= isset($date) ? 'Laporan Penjualan untuk Tanggal: ' . $date : 'Laporan Penjualan Seluruh Waktu' ?></h4>
 
     <?php if (isset($message)): ?>
         <div class="alert alert-warning"><?= $message ?></div>
     <?php else: ?>
         <div id="laporan">
-            <table class="table table-bordered">
+            <table class="table table-bordered text-center">
                 <thead>
                     <tr>
                         <th>Kode Transaksi</th>
-                        <th>Tanggal Transaksi</th> <!-- Tambahkan ini -->
+                        <th>Tanggal Transaksi</th>
                         <th>Nama Barang</th>
                         <th>Jumlah Terjual</th>
                         <th>Total Harga</th>

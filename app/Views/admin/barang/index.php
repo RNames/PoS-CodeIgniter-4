@@ -1,17 +1,16 @@
 <?= $this->include('admin/templates/header') ?>
 <?= $this->include('admin/templates/sidebar') ?>
 
-
-<div class="container">
+<div class="container p-5 pt-4 pb-4 mb-3 mr-5 bg-white border rounded">
     <?php if (session()->getFlashdata('error')) : ?>
         <div class="alert alert-danger text-center">
             <?= session()->getFlashdata('error') ?>
         </div>
     <?php endif; ?>
     <h2>Daftar Barang</h2>
-    <a style="margin-bottom: 10px;" href="<?= base_url('owner/barang/create') ?>" class="btn btn-primary">Tambah Barang</a>
+    <a  href="<?= base_url('owner/barang/create') ?>" class="btn btn-primary mb-3 mt-3">Tambah Barang</a>
 
-    <table class="table text-center">
+    <table class="table table-sm text-center">
         <thead>
             <tr>
                 <th>Kode Barang</th>
@@ -40,16 +39,16 @@
                     <td><?= esc($b['total_stok']); ?></td>
                     <td>
                         <a href="<?= base_url('owner/barang/detail/' . $b['kode_barang']) ?>" class="btn btn-primary">
-                            <i class='fas fa-info-circle' style='font-size:20px'></i> Detail
+                            <i class='fas fa-info-circle' style='font-size:20px'></i> 
                         </a>
                         <a href="<?= base_url('owner/barang/tambahStok/' . $b['kode_barang']) ?>" class="btn btn-info">
-                            <i class='fas fa-plus' style='font-size:20px'></i> Tambah Stok
+                            <i class='fas fa-plus' style='font-size:20px'></i> 
                         </a>
                         <a href="<?= base_url('owner/barang/edit/' . $b['id']) ?>" class="btn btn-warning">
-                            <i class='fas fa-edit' style='font-size:20px'></i> Edit
+                            <i class='fas fa-edit' style='font-size:20px'></i>
                         </a>
                         <button class="deleteBtn btn btn-danger" data-id="<?= $b['id'] ?>" class="btn btn-danger">
-                            <i class='fas fa-trash-alt' style='font-size:20px'></i> Hapus
+                            <i class='fas fa-trash-alt' style='font-size:20px'></i> 
                         </button>
 
                     </td>

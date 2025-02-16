@@ -86,7 +86,7 @@ class SetPetugasController extends BaseController
             'time'       => date('Y-m-d H:i:s')
         ]);
 
-        return redirect()->to(base_url('owner/petugas'))->with('success', 'Petugas berhasil ditambahkan!');
+        return redirect()->to(base_url('owner/pengaturan-petugas'))->with('success', 'Petugas berhasil ditambahkan!');
     }
 
     public function edit($id)
@@ -141,7 +141,7 @@ class SetPetugasController extends BaseController
             'time'       => date('Y-m-d H:i:s')
         ]);
 
-        return redirect()->to(base_url('owner/petugas'))->with('success', 'Petugas berhasil diperbarui!');
+        return redirect()->to(base_url('owner/pengaturan-petugas'))->with('success', 'Petugas berhasil diperbarui!');
     }
 
     public function delete($id)
@@ -149,14 +149,14 @@ class SetPetugasController extends BaseController
         $petugas = $this->petugasModel->find($id);
 
         if (!$petugas) {
-            return redirect()->to(base_url('owner/petugas'))->with('error', 'Petugas tidak ditemukan!');
+            return redirect()->to(base_url('owner/pengaturan-petugas'))->with('error', 'Petugas tidak ditemukan!');
         }
 
         $result = $this->petugasModel->update($id, ['deleted_at' => date('Y-m-d H:i:s')]);
 
         // Cek apakah update berhasil
         if (!$result) {
-            return redirect()->to(base_url('owner/petugas'))->with('error', 'Gagal menonaktifkan petugas!');
+            return redirect()->to(base_url('owner/pengaturan-petugas'))->with('error', 'Gagal menonaktifkan petugas!');
         }
 
         // Simpan log penghapusan
@@ -169,7 +169,7 @@ class SetPetugasController extends BaseController
             'time'       => date('Y-m-d H:i:s')
         ]);
 
-        return redirect()->to(base_url('owner/petugas'))->with('success', 'Petugas berhasil dinonaktifkan!');
+        return redirect()->to(base_url('owner/pengaturan-petugas'))->with('success', 'Petugas berhasil dinonaktifkan!');
     }
 
 
@@ -178,7 +178,7 @@ class SetPetugasController extends BaseController
         $petugas = $this->petugasModel->onlyDeleted()->find($id);
 
         if (!$petugas) {
-            return redirect()->to(base_url('owner/petugas'))->with('error', 'Petugas tidak ditemukan atau belum dihapus!');
+            return redirect()->to(base_url('owner/pengaturan-petugas'))->with('error', 'Petugas tidak ditemukan atau belum dihapus!');
         }
 
         $this->petugasModel->update($id, ['deleted_at' => null]);
@@ -193,6 +193,6 @@ class SetPetugasController extends BaseController
             'time'       => date('Y-m-d H:i:s')
         ]);
 
-        return redirect()->to(base_url('owner/petugas/nonaktif'))->with('success', 'Petugas berhasil diaktifkan kembali!');
+        return redirect()->to(base_url('owner/pengaturan-petugas/nonaktif'))->with('success', 'Petugas berhasil diaktifkan kembali!');
     }
 }

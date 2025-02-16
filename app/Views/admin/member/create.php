@@ -8,7 +8,7 @@
 
 <div class="container">
     <h2>Tambah Member</h2>
-    <form id="memberForm" action="<?= base_url('owner/member/store') ?>" method="post">
+    <form id="memberForm" action="<?= base_url('owner/pengaturan-member/store') ?>" method="post">
 
         <div class="form-group">
             <label>Tipe Member</label>

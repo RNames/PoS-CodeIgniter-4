@@ -46,7 +46,7 @@
                 cancelButtonText: "Batal"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "<?= base_url('owner/petugas/restore/') ?>" + petugasId;
+                    window.location.href = "<?= base_url('owner/pengaturan-petugas/restore/') ?>" + petugasId;
                 }
             });
         });

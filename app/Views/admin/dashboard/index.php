@@ -2,9 +2,6 @@
 <?= $this->include('admin/templates/sidebar') ?>
 
 <div class="container">
-    <h3>Dashboard</h3>
-    <br />
-
     <div class="row">
         <div class="col-md-3 mb-3">
             <div class="card">
@@ -17,7 +14,7 @@
                     </center>
                 </div>
                 <div class="card-footer">
-                    <a href='<?= base_url('barang') ?>'>Tabel Barang <i class='fa fa-angle-double-right'></i></a>
+                    <a href='<?= base_url('owner/barang') ?>'>Tabel Barang <i class='fa fa-angle-double-right'></i></a>
                 </div>
             </div>
         </div>
@@ -34,7 +31,7 @@
                     </center>
                 </div>
                 <div class="card-footer">
-                    <a href='<?= base_url('barang') ?>'>Tabel Barang <i class='fa fa-angle-double-right'></i></a>
+                    <a href='<?= base_url('owner/barang') ?>'>Tabel Barang <i class='fa fa-angle-double-right'></i></a>
                 </div>
             </div>
         </div>
@@ -51,7 +48,7 @@
                     </center>
                 </div>
                 <div class="card-footer">
-                    <a href='<?= base_url('laporan') ?>'>Tabel laporan <i class='fa fa-angle-double-right'></i></a>
+                    <a href='<?= base_url('owner/laporan') ?>'>Tabel laporan <i class='fa fa-angle-double-right'></i></a>
                 </div>
             </div>
         </div>
@@ -68,7 +65,7 @@
                     </center>
                 </div>
                 <div class="card-footer">
-                    <a href='<?= base_url('kategori') ?>'>Tabel Kategori <i class='fa fa-angle-double-right'></i></a>
+                    <a href='<?= base_url('owner/kategori') ?>'>Tabel Kategori <i class='fa fa-angle-double-right'></i></a>
                 </div>
             </div>
         </div>
@@ -83,12 +80,18 @@
             <canvas id="salesChart" width="400" height="200"></canvas>
         </div>
         <div class="col mb-3">
-            <!-- Low Stock Alert -->
+            
             <?php if (!empty($low_stock)): ?>
                 <div class='alert alert-warning'>
                     <span class='glyphicon glyphicon-info-sign'></span>
-                    Ada <span style='color:red'><?= count($low_stock) ?></span> barang yang stok tersisa kurang dari minimal stok. Silahkan pesan lagi!!
+                    <span style='color:red'><?= count($low_stock) ?></span> barang yang stok tersisa kurang dari minimal stok. Silahkan pesan lagi!!
                     <span class='pull-right'><a href='<?= base_url('barang') ?>'>Tabel Barang <i class='fa fa-angle-double-right'></i></a></span>
+                </div>
+            <?php endif; ?>
+            <?php if (empty($low_stock)): ?>
+                <div class='alert alert-success'>
+                    <span class='glyphicon glyphicon-info-sign'></span>
+                    <span style='color:green'></span> tidak ada barang yang kurang dari minimal stok
                 </div>
             <?php endif; ?>
 

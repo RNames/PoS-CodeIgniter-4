@@ -8,7 +8,7 @@
 
 <div class="container">
     <h2>Edit Member</h2>
-    <form id="memberForm" action="<?= base_url('owner/member/update/' . $member['id']) ?>" method="post">
+    <form id="memberForm" action="<?= base_url('owner/pengaturan-member/update/' . $member['id']) ?>" method="post">
         <div class="form-group">
             <label>Nama</label>
             <input type="text" name="nm_member" class="form-control" value="<?= $member['nm_member'] ?>" required>
