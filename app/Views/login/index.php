@@ -96,11 +96,18 @@
     <!-- Login Form -->
     <div class="login-container">
         <div class="card">
-            <?php if (session()->getFlashdata('error')) : ?>
-                <div class="alert alert-danger text-center">
-                    <?= session()->getFlashdata('error') ?>
+            <?php if (session()->getFlashdata('status_error')) : ?>
+                <div class="alert alert-danger text-center" role="alert">
+                    <?= session()->getFlashdata('status_error'); ?>
                 </div>
             <?php endif; ?>
+
+            <?php if (session()->getFlashdata('error')) : ?>
+                <div class="alert alert-danger text-center" role="alert">
+                    <?= session()->getFlashdata('error'); ?>
+                </div>
+            <?php endif; ?>
+
             <h3 class="text-center mb-5">Login to Kasiran</h3>
             <form class="auth-form login-form" method="post" action="<?= base_url('login/process'); ?>">
                 <?= csrf_field(); ?>

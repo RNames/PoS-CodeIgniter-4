@@ -18,7 +18,11 @@ class PetugasModel extends Model
         'created_at',
         'updated_at',
         'status',
+        'deleted_at',
     ];
+
+    protected $useSoftDeletes = true;
+    protected $deletedField = 'deleted_at';
 
     // Add a custom method to fetch member data
     public function getMember($id)
@@ -28,21 +32,12 @@ class PetugasModel extends Model
 
     public function getUserByEmail($email)
     {
-        return $this->where('email', $email)->first();
+        return $this->withDeleted()->where('email', $email)->first();
     }
+
 
     public function getPetugas()
     {
         return $this->where('roles', 'petugas')->findAll();
-    }
-
-    public function getActivePetugas()
-    {
-        return $this->where('roles', 'petugas')->where('status', 1)->findAll();
-    }
-
-    public function getInactivePetugas()
-    {
-        return $this->where('roles', 'petugas')->where('status', 0)->findAll();
     }
 }

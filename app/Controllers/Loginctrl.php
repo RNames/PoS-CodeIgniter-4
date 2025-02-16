@@ -30,21 +30,38 @@ class Loginctrl extends BaseController
         $email = $this->request->getVar('email');
         $password = $this->request->getVar('password');
 
+        // Ambil data petugas (termasuk yang sudah dihapus dengan soft delete)
         $dataUser = $petugas->getUserByEmail($email);
 
         if ($dataUser) {
             $id = $dataUser->id;
-            $dataPetugas = $petugas->getMember($id);
 
+            // Ambil data petugas berdasarkan ID termasuk yang sudah dihapus (soft delete)
+            $dataPetugas = $petugas->withDeleted()->find($id);
+
+            // Pastikan data petugas ada (tidak null)
+            if ($dataPetugas === null) {
+                session()->setFlashdata('error', 'Data petugas tidak ditemukan.');
+                return redirect()->back();
+            }
+
+            // Cek apakah akun telah dinonaktifkan (soft delete)
+            if ($dataPetugas->deleted_at !== null) {
+                session()->setFlashdata('status_error', 'Akun Anda telah dinonaktifkan! Hubungi admin untuk informasi lebih lanjut.');
+                return redirect()->back(); // Hentikan proses lebih lanjut
+            }
+
+            // Verifikasi password jika akun tidak dinonaktifkan
             if (password_verify($password, $dataUser->password)) {
                 session()->set([
-                    'id' => $dataUser->id,
+                    'id'        => $dataUser->id,
                     'nama'      => $dataPetugas->nm_petugas,
                     'gambar'    => $dataPetugas->gambar,
                     'roles'     => $dataPetugas->roles,
                     'logged_in' => TRUE
                 ]);
 
+                // Simpan log login
                 $this->logsModel->save([
                     'id_petugas' => $dataUser->id,
                     'action' => 'login',
@@ -52,6 +69,7 @@ class Loginctrl extends BaseController
                     'time' => date('Y-m-d H:i:s')
                 ]);
 
+                // Redirect berdasarkan role
                 if ($dataPetugas->roles === 'owner') {
                     return redirect()->to(base_url('owner/dashboard'));
                 } elseif ($dataPetugas->roles === 'petugas') {
@@ -66,7 +84,6 @@ class Loginctrl extends BaseController
             return redirect()->back();
         }
     }
-
 
     public function logout()
     {
