@@ -21,8 +21,6 @@ $routes->group('owner', ['filter' => 'role:owner'], function ($routes) {
     $routes->get('logs/detail/(:num)', 'LogsController::detail/$1');
     $routes->get('logs/getFilteredLogs', 'LogsController::getFilteredLogs');
 
-
-
     //Petugas
     $routes->get('petugas', 'Owner\SetPetugasController::index');
     $routes->get('petugas/create', 'Owner\SetPetugasController::create');
@@ -32,7 +30,6 @@ $routes->group('owner', ['filter' => 'role:owner'], function ($routes) {
     $routes->get('petugas/delete/(:num)', 'Owner\SetPetugasController::delete/$1');
     $routes->get('petugas/nonaktif', 'Owner\SetPetugasController::nonaktif');
     $routes->get('petugas/restore/(:num)', 'Owner\SetPetugasController::restore/$1');
-
 
     //Member
     $routes->get('member', 'Owner\SetMemberController::index');
@@ -44,7 +41,6 @@ $routes->group('owner', ['filter' => 'role:owner'], function ($routes) {
     $routes->get('member/detail/(:num)', 'Owner\SetMemberController::detail/$1');
     $routes->get('member/nonaktif', 'Owner\SetMemberController::nonaktif');
     $routes->get('member/restore/(:num)', 'Owner\SetMemberController::restore/$1');
-
 
     //Barang
     $routes->get('barang', 'Owner\BarangController::index');
@@ -69,15 +65,21 @@ $routes->group('owner', ['filter' => 'role:owner'], function ($routes) {
     $routes->get('kategori/edit/(:num)', 'Owner\KategoriController::edit/$1');
     $routes->post('kategori/update/(:num)', 'Owner\KategoriController::update/$1');
     $routes->get('kategori/delete/(:num)', 'Owner\KategoriController::delete/$1');
+    $routes->get('kategori/deleted', 'Owner\KategoriController::deleted');
+    $routes->get('kategori/restore/(:num)', 'Owner\KategoriController::restore/$1');
 
     //Transaksi
     $routes->get('transaksi', 'Owner\TransaksiController::index');
     $routes->post('transaksi/proses', 'Owner\TransaksiController::proses');
     $routes->get('transaksi/cetak_nota/(:num)', 'Owner\TransaksiController::cetak_nota/$1');
 
-
+    //Laporan
     $routes->get('laporan', 'Owner\LaporanController::index');
     $routes->get('laporan/detail/(:num)', 'Owner\LaporanController::detail/$1');
+    $routes->get('laporan/daily_report/(:any)', 'Owner\LaporanController::dailyReport/$1');
+    $routes->get('laporan/penjualan', 'Owner\LaporanController::penjualan');
+
+    $routes->get('laporan/export_pdf', 'Owner\LaporanController::exportPdf');
 });
 
 // **GROUP PETUGAS**
