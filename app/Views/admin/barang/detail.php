@@ -11,12 +11,12 @@
         </div>
     </div>
 
-    <div class="card mt-3">
+    <div class="card border-success mt-3">
         <div class="card-body">
             <h5 class="card-title mb-2">Nama Barang : <?= esc($barang['nama_barang']); ?></h5>
-            <p><strong>Kode Barang :</strong> <?= esc($barang['kode_barang']); ?></p>
-            <p><strong>Kategori :</strong> <?= esc($barang['nama_kategori']); ?></p>
-            <p><strong>Harga Beli :</strong> Rp. <?= number_format($barang['harga_beli'], 0, ',', '.'); ?></p>
+            <p><strong>Kode Barang  :</strong> <?= esc($barang['kode_barang']); ?></p>
+            <p><strong>Kategori     :</strong> <?= esc($barang['nama_kategori']); ?></p>
+            <p><strong>Harga Beli   :</strong> Rp. <?= number_format($barang['harga_beli'], 0, ',', '.'); ?></p>
             <p><strong>Harga Jual 1 :</strong> Rp. <?= number_format($barang['harga_jual_1'], 0, ',', '.'); ?></p>
             <p><strong>Harga Jual 2 :</strong> Rp. <?= number_format($barang['harga_jual_2'], 0, ',', '.'); ?></p>
             <p><strong>Harga Jual 3 :</strong> Rp. <?= number_format($barang['harga_jual_3'], 0, ',', '.'); ?></p>

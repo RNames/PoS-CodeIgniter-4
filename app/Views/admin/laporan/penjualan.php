@@ -1,26 +1,34 @@
 <?= $this->include('admin/templates/header') ?>
 <?= $this->include('admin/templates/sidebar') ?>
 
-<div class="container mt-4">
+<div class="container p-5 pt-4 pb-4 mb-3 mr-5 bg-white border rounded">
     <h2><?= isset($date) ? 'Laporan Penjualan untuk Tanggal: ' . $date : 'Laporan Penjualan' ?></h2>
 
     <div class="container mt-4 mb-4">
-        <form action="<?= site_url('owner/laporan/penjualan') ?>" method="get" class="row g-3">
+        <form action="<?= site_url('owner/laporan/penjualan') ?>" method="get">
 
-            <div class="col-md-6">
-                <label for="kode_transaksi">Cari Kode Transaksi</label>
-                <input type="text" id="kode_transaksi" name="kode_transaksi" class="form-control" value="<?= isset($kodeTransaksi) ? $kodeTransaksi : '' ?>" placeholder="Kode Transaksi">
+            <div class="row g-3 mb-2">
+                <div class="col-md-6">
+                    <label for="kode_transaksi">Cari Kode Transaksi</label>
+                    <input type="text" id="kode_transaksi" name="kode_transaksi" class="form-control" value="<?= isset($kodeTransaksi) ? $kodeTransaksi : '' ?>" placeholder="Kode Transaksi">
+                </div>
+
+                <div class="col-md-6">
+                    <label for="date">Pilih Tanggal</label>
+                    <input type="date" id="date" name="date" class="form-control" value="<?= isset($date) ? $date : '' ?>">
+                </div>
             </div>
 
-            <div class="col-md-6">
-                <label for="date">Pilih Tanggal</label>
-                <input type="date" id="date" name="date" class="form-control" value="<?= isset($date) ? $date : '' ?>">
-            </div>
-
-            <div class="col-md-6 align-self-end d-flex gap-2">
-                <button type="submit" class="btn btn-primary">Filter</button>
-                <a href="<?= base_url('owner/laporan/penjualan') ?>" class="btn btn-secondary">Reset</a>
-                <a href="<?= base_url('owner/laporan/export_pdf?date=' . $date . '&kode_transaksi=' . $kodeTransaksi) ?>" class="btn btn-danger">Export ke PDF</a>
+            <div class="row g-3 mb-4">
+                <div class="col">
+                    <button type="submit" class="btn btn-block btn-primary">Filter</button>
+                </div>
+                <div class="col">
+                    <a href="<?= base_url('owner/laporan/penjualan') ?>" class="btn btn-block btn-secondary">Reset</a>
+                </div>
+                <div class="col">
+                    <a href="<?= base_url('owner/laporan/export_pdf?date=' . $date . '&kode_transaksi=' . $kodeTransaksi) ?>" class="btn btn-block btn-danger">Export ke PDF</a>
+                </div>
             </div>
         </form>
     </div>
@@ -30,7 +38,7 @@
         <div class="alert alert-warning"><?= $message ?></div>
     <?php else: ?>
         <div id="laporan">
-            <table class="table table-bordered text-center">
+            <table class="table mt-3 text-center">
                 <thead>
                     <tr>
                         <th>Kode Transaksi</th>
