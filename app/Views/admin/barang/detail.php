@@ -43,9 +43,6 @@
                             <a href="<?= base_url('owner/barang/editStokForm/' . $stok['id']) ?>" class="btn btn-warning">
                                 <i class='fas fa-edit' style='font-size:20px'></i>Edit
                             </a>
-                            <button type="button" class="btn btn-danger deleteBtn" data-id="<?= $stok['id']; ?>">
-                                <i class='fas fa-trash-alt' style='font-size:20px'></i> Hapus
-                            </button>
                         </td>
                     </tr>
                 <?php endforeach; ?>

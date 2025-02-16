@@ -8,6 +8,7 @@ class BarangModel extends Model
 {
     protected $table = 'barang';
     protected $primaryKey = 'id';
+    protected $useSoftDeletes = true;
     protected $allowedFields = [
         'kode_barang',
         'id_kategori',
@@ -18,15 +19,23 @@ class BarangModel extends Model
         'harga_jual_1',
         'harga_jual_2',
         'harga_jual_3',
+        'minimal_stok',
         'stok',
         'created_at',
         'updated_at',
-        'status',
+        'deleted_at',
     ];
+
+    protected $stokModel;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->stokModel = new StokModel();  // Instantiate StokModel
+    }
 
     public function generateIdBarang()
     {
-        // Ambil ID terakhir
         $lastBarang = $this->orderBy('id', 'DESC')->first();
 
         if ($lastBarang) {
@@ -36,8 +45,6 @@ class BarangModel extends Model
         } else {
             $newNumber = 1;
         }
-
-        // Format menjadi bXXX
         return 'B' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
     }
 
@@ -53,11 +60,16 @@ class BarangModel extends Model
 
     public function getBarangWithTotalStok()
     {
-        return $this->select('barang.*, kategori.nama_kategori, 
-            COALESCE(SUM(stok.stok), 0) AS total_stok')
+        // Fetch data from barang and kategori tables
+        $barangData = $this->select('barang.*, kategori.nama_kategori')
             ->join('kategori', 'kategori.id = barang.id_kategori', 'left')
-            ->join('stok', 'stok.kode_barang = barang.kode_barang', 'left')
-            ->groupBy('barang.kode_barang')
             ->findAll();
+
+        foreach ($barangData as &$barang) {
+            // Use StokModel to get the total stock for each barang
+            $barang['total_stok'] = $this->stokModel->getTotalStok($barang['kode_barang']);
+        }
+
+        return $barangData;
     }
 }

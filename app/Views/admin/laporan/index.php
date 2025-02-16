@@ -5,29 +5,33 @@
     <h2>Laporan Transaksi</h2>
 
     <!-- Form Filter -->
-    <form action="<?= base_url('owner/transaksi/laporan') ?>" method="get" class="row g-3">
-        <div class="col-md-3">
-            <label for="id_laporan">ID Laporan:</label>
-            <input type="text" name="id_laporan" class="form-control" placeholder="Masukkan ID Laporan" value="<?= esc($idLaporan ?? '') ?>">
-        </div>
-        <div class="col-md-3">
-            <label for="start_date">Tanggal Mulai:</label>
-            <input type="date" name="start_date" class="form-control" value="<?= esc($startDate ?? '') ?>">
-        </div>
-        <div class="col-md-3">
-            <label for="end_date">Tanggal Akhir:</label>
-            <input type="date" name="end_date" class="form-control" value="<?= esc($endDate ?? '') ?>">
-        </div>
-        <div class="col-md-3 align-self-end">
-            <button type="submit" class="btn btn-primary">Filter</button>
-        </div>
-    </form>
+    <div class="container mt-4 mb-4">
+        <form action="<?= base_url('owner/laporan') ?>" method="get" class="row g-3">
+            <div class="col-md-4">
+                <label for="kode_transaksi">Kode Transaksi:</label>
+                <input type="text" name="kode_transaksi" class="form-control" placeholder="Masukkan Kode Transaksi" value="<?= esc($kodeTransaksi ?? '') ?>">
+            </div>
+            <div class="col-md-4">
+                <label for="start_date">Tanggal Mulai</label>
+                <input type="date" name="start_date" class="form-control" value="<?= esc($startDate ?? '') ?>">
+            </div>
+            <div class="col-md-4">
+                <label for="end_date">Tanggal Akhir</label>
+                <input type="date" name="end_date" class="form-control" value="<?= esc($endDate ?? '') ?>">
+            </div>
+            <div class="col-md-3 align-self-end d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Filter</button>
+                <a href="<?= base_url('owner/laporan') ?>" class="btn btn-secondary">Reset</a>
+            </div>
+
+        </form>
+    </div>
 
 
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>ID Transaksi</th>
+                <th>Kode Transaksi</th>
                 <th>Tanggal</th>
                 <th>Kasir</th>
                 <th>Member</th>
@@ -38,7 +42,7 @@
         <tbody>
             <?php foreach ($laporan as $row) : ?>
                 <tr>
-                    <td><?= esc($row['id']) ?></td>
+                    <td><?= esc($row['kode_transaksi']) ?></td>
                     <td><?= esc($row['tanggal_transaksi']) ?></td>
                     <td><?= esc($row['nama_kasir']) ?></td>
                     <td><?= esc($row['nama_member']) ?> (Tipe <?= esc($row['tipe_member']) ?>)</td>

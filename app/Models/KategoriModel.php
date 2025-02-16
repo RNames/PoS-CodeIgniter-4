@@ -8,25 +8,45 @@ class KategoriModel extends Model
 {
     protected $table = 'kategori';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nama_kategori', 'kode_kategori', 'created_at', 'updated_at'];
+    protected $allowedFields = [
+        'nama_kategori',
+        'kode_kategori',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+    
+    protected $useSoftDeletes = true; // Aktifkan soft delete
+    protected $deletedField = 'deleted_at';
 
     // Fungsi untuk mendapatkan kode kategori terakhir dan menambahkan 1
     public function generateKodeKategori()
     {
         $lastKategori = $this->orderBy('id', 'DESC')->first();
         if ($lastKategori) {
-            $lastNumber = (int) substr($lastKategori['kode_kategori'], 1); // Ambil angka dari K001
+            $lastNumber = (int) substr($lastKategori['kode_kategori'], 1);
             $newNumber = $lastNumber + 1;
-            return 'K' . str_pad($newNumber, 3, '0', STR_PAD_LEFT); // Format menjadi K001, K002, dll.
+            return 'K' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
         }
-        return 'K001'; // Jika belum ada kategori, mulai dari K001
+        return 'K001';
     }
 
-    public function getKategori($id = false)
+    public function getKategori($id = false, $includeDeleted = false)
     {
         if ($id === false) {
-            return $this->findAll();
+            $query = $this;
+            if (!$includeDeleted) {
+                $query = $query->where('deleted_at', null);
+            }
+            return $query->findAll();
         }
+
         return $this->find($id);
+    }
+
+    // Fungsi untuk mengembalikan kategori yang dihapus (restore)
+    public function restoreKategori($id)
+    {
+        return $this->update($id, ['deleted_at' => null]);
     }
 }

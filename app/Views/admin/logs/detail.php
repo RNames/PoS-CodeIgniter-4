@@ -41,7 +41,7 @@
                             <tr>
                                 <td> <?= ucwords(str_replace('_', ' ', $key)); ?> </td>
                                 <td> <?= $oldData[$key] ?? '-'; ?> </td>
-                                <td class="text-success"> <?= $newValue; ?> </td>
+                                <td class="text-success"> <?= $newValue ?? '-';; ?> </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

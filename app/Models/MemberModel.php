@@ -6,8 +6,11 @@ use CodeIgniter\Model;
 
 class MemberModel extends Model
 {
-    protected $table = 'member'; // Nama tabel
-    protected $primaryKey = 'id'; // Primary key
+    protected $table      = 'member';
+    protected $primaryKey = 'id';
+
+    protected $useSoftDeletes = true;
+
     protected $allowedFields = [
         'nm_member',
         'email',
@@ -15,12 +18,17 @@ class MemberModel extends Model
         'alamat',
         'poin',
         'tipe_member',
+        'status',
         'created_at',
         'updated_at',
-        'status',
-    ]; // Kolom yang bisa diisi
+        'deleted_at'
+    ];
 
-    // Soft delete function (set status to 0)
+    protected $useTimestamps = true;
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+    protected $deletedField  = 'deleted_at'; // Add this line for the soft delete field
+
     public function softDelete($id)
     {
         return $this->update($id, ['status' => 0]);

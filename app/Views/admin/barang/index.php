@@ -3,19 +3,25 @@
 
 
 <div class="container">
+    <?php if (session()->getFlashdata('error')) : ?>
+        <div class="alert alert-danger text-center">
+            <?= session()->getFlashdata('error') ?>
+        </div>
+    <?php endif; ?>
     <h2>Daftar Barang</h2>
     <a style="margin-bottom: 10px;" href="<?= base_url('owner/barang/create') ?>" class="btn btn-primary">Tambah Barang</a>
 
     <table class="table text-center">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>Kode Barang</th>
                 <th>Nama Barang</th>
                 <th>Kategori</th>
                 <th>Tanggal Expired</th>
                 <th>Harga Jual 1</th>
                 <th>Harga Jual 2</th>
                 <th>Harga Jual 3</th>
+                <th>Minimal Stok</th>
                 <th>Total Stok</th>
                 <th>Aksi</th>
             </tr>
@@ -30,6 +36,7 @@
                     <td>Rp. <?= number_format($b['harga_jual_1'], 0, ',', '.'); ?></td>
                     <td>Rp. <?= number_format($b['harga_jual_2'], 0, ',', '.'); ?></td>
                     <td>Rp. <?= number_format($b['harga_jual_3'], 0, ',', '.'); ?></td>
+                    <td><?= esc($b['minimal_stok']); ?></td>
                     <td><?= esc($b['total_stok']); ?></td>
                     <td>
                         <a href="<?= base_url('owner/barang/detail/' . $b['kode_barang']) ?>" class="btn btn-primary">

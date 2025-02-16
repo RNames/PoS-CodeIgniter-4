@@ -32,6 +32,9 @@
         <label>Harga Jual 3 (+30%)</label>
         <input type="number" id="harga_jual_3" name="harga_jual_3" class="form-control" required readonly>
 
+        <label>Minimal Stok</label>
+        <input type="number" id="minimal_stok" name="minimal_stok" class="form-control" required>
+
         <label>Stok</label>
         <input type="number" name="stok" class="form-control" required>
 

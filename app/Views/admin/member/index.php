@@ -2,8 +2,11 @@
 <?= $this->include('admin/templates/sidebar') ?>
 
 <div class="container">
-    <h2>Daftar Member Aktif</h2>
-    <a style="margin-bottom: 10px;" href="<?= base_url('owner/member/create') ?>" class="btn btn-primary">Tambah Member</a>
+    <h2>Daftar Member</h2>
+    <div class="d-flex gap-2 mb-4">
+        <a href="<?= base_url('owner/member/create') ?>" class="btn btn-primary">Tambah Member</a>
+        <a href="<?= base_url('owner/member/nonaktif') ?>" class="btn btn-secondary">Lihat Member Nonaktif</a>
+    </div>
     <table class="table">
 
         <tr>

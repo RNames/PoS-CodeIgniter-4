@@ -1,10 +1,9 @@
 <?= $this->include('admin/templates/header') ?>
 <?= $this->include('admin/templates/sidebar') ?>
 
-
 <div class="container">
     <h2>Tambah Stok Barang</h2>
-    <form action="<?= base_url('owner/barang/tambahStok') ?>" method="post">
+    <form id="stokForm" action="<?= base_url('owner/barang/tambahStok') ?>" method="post">
         <input type="hidden" name="kode_barang" value="<?= $barang['kode_barang'] ?>">
 
         <div class="form-group">
@@ -27,8 +26,29 @@
             <input type="date" name="tanggal_expired" class="form-control" required>
         </div>
 
-        <button type="submit" class="btn btn-success">Simpan</button>
+        <button type="button" id="btnSubmit" class="btn btn-success">Simpan</button>
     </form>
 </div>
+
+<!-- Tambahkan SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.getElementById('btnSubmit').addEventListener('click', function() {
+        Swal.fire({
+            title: 'Konfirmasi Tambah Stok',
+            text: "Apakah Anda yakin ingin menambahkan stok ini?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Simpan!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('stokForm').submit();
+            }
+        });
+    });
+</script>
 
 <?= $this->include('admin/templates/footer') ?>

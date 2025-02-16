@@ -27,6 +27,9 @@
     <label>Harga Jual 3 (30% Markup)</label>
     <input type="number" id="harga_jual_3" value="<?= $barang['harga_jual_3']; ?>" class="form-control" readonly>
 
+    <label>Minimal Stok</label>
+    <input type="number" name="minimal_stok" id="minimal_stok" value="<?= $barang['minimal_stok']; ?>" class="form-control" required>
+
     <button type="submit" class="btn btn-success mt-3">Update</button>
 </form>
 

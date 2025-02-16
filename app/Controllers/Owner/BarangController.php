@@ -51,6 +51,7 @@ class BarangController extends BaseController
             'harga_jual_1'  => $hargaBeli + ($hargaBeli * 0.10),
             'harga_jual_2'  => $hargaBeli + ($hargaBeli * 0.20),
             'harga_jual_3'  => $hargaBeli + ($hargaBeli * 0.30),
+            'minimal_stok'  => $this->request->getPost('minimal_stok'),
             'created_at'    => date('Y-m-d H:i:s'),
         ];
 
@@ -124,6 +125,7 @@ class BarangController extends BaseController
             'harga_jual_1'  => $hargaBeliBaru + ($hargaBeliBaru * 0.10), // 10% markup
             'harga_jual_2'  => $hargaBeliBaru + ($hargaBeliBaru * 0.20), // 20% markup
             'harga_jual_3'  => $hargaBeliBaru + ($hargaBeliBaru * 0.30), // 30% markup
+            'minimal_stok'  => $this->request->getPost('minimal_stok'),
         ];
 
         $this->barangModel->update($id, $newData);
@@ -136,6 +138,7 @@ class BarangController extends BaseController
             'harga_jual_1'  => $oldData['harga_jual_1'],
             'harga_jual_2'  => $oldData['harga_jual_2'],
             'harga_jual_3'  => $oldData['harga_jual_3'],
+            'minimal_stok'  => $oldData['minimal_stok'],
         ];
 
         $logNewData = [
@@ -145,6 +148,7 @@ class BarangController extends BaseController
             'harga_jual_1'  => $newData['harga_jual_1'],
             'harga_jual_2'  => $newData['harga_jual_2'],
             'harga_jual_3'  => $newData['harga_jual_3'],
+            'minimal_stok'  => $oldData['minimal_stok'],
         ];
 
         $this->logsModel->save([
@@ -184,8 +188,8 @@ class BarangController extends BaseController
             'id_petugas' => session()->get('id'),
             'action'     => 'hapus',
             'msg'        => "Menghapus barang: " . $barang['nama_barang'],
-            'old_data'   => json_encode($oldData),
-            'new_data'   => null,
+            'old_data'   => null,
+            'new_data'   => json_encode(['deleted_at' => $barang['deleted_at']]),
             'time'       => date('Y-m-d H:i:s')
         ]);
 
@@ -258,8 +262,6 @@ class BarangController extends BaseController
         return redirect()->to(base_url('owner/barang'))->with('success', 'Stok berhasil ditambahkan!');
     }
 
-
-
     public function detail($kode_barang)
     {
         $barang = $this->barangModel
@@ -284,7 +286,6 @@ class BarangController extends BaseController
         return view('admin/barang/detail', $data);
     }
 
-    // Form Edit Stok
     public function editStokForm($id_stok)
     {
         $stok = $this->stokModel->find($id_stok);
@@ -301,7 +302,6 @@ class BarangController extends BaseController
         return view('admin/barang/edit_stok', $data);
     }
 
-    // Fungsi untuk Update Stok
     public function updateStok($id)
     {
         $stok = $this->stokModel->find($id);
@@ -334,9 +334,6 @@ class BarangController extends BaseController
         return redirect()->to('/owner/barang/detail/' . $kode_barang);
     }
 
-
-
-    // Fungsi untuk Menghapus Stok
     public function deleteStok($id)
     {
         $stok = $this->stokModel->find($id);

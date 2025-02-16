@@ -24,9 +24,6 @@
                     <td class="text-center"><?= esc($m['poin']) ?></td>
                     <td class="text-center"><?= esc($m['tipe_member']) ?></td>
                     <td class="text-center">
-                        <a href="<?= base_url('owner/member/detail/' . $m['id']) ?>" class="btn btn-info">
-                            <i class='fas fa-eye' style='font-size:20px'></i> Detail
-                        </a>
                         <button class="restoreBtn btn btn-success" data-id="<?= $m['id'] ?>">
                             <i class='fas fa-undo' style='font-size:20px'></i> Aktifkan
                         </button>

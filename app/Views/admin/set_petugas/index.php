@@ -3,7 +3,10 @@
 
 <div class="container">
     <h2>Daftar Petugas Aktif</h2>
-    <a style="margin-bottom: 10px;" href="<?= base_url('owner/petugas/create') ?>" class="btn btn-primary">Tambah Petugas</a>
+    <div class="d-flex gap-2 mb-4">
+        <a href="<?= base_url('owner/petugas/create') ?>" class="btn btn-primary">Tambah Petugas</a>
+        <a href="<?= base_url('owner/petugas/nonaktif') ?>" class="btn btn-secondary">Lihat Petugas Nonaktif</a>
+    </div>
     <table class="table text-center">
         <thead>
             <tr>
@@ -37,7 +40,6 @@
 </div>
 
 <script>
-    // Konfirmasi sebelum menonaktifkan petugas (soft delete)
     document.querySelectorAll('.deleteBtn').forEach(button => {
         button.addEventListener('click', function() {
             let petugasId = this.getAttribute('data-id');
@@ -52,7 +54,7 @@
                 cancelButtonText: "Batal"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "<?= base_url('owner/petugas/delete/') ?>" + petugasId;
+                    window.location.href = "<?= base_url('owner/petugas/delete/') ?>" + encodeURIComponent(petugasId);
                 }
             });
         });

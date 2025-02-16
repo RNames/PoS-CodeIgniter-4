@@ -22,7 +22,7 @@ class KategoriController extends BaseController
 
     public function create()
     {
-        $data['kode_kategori'] = $this->kategoriModel->generateKodeKategori(); // Ambil kode otomatis
+        $data['kode_kategori'] = $this->kategoriModel->generateKodeKategori();
         return view('admin/kategori/create', $data);
     }
 
@@ -30,7 +30,7 @@ class KategoriController extends BaseController
     {
         $this->kategoriModel->save([
             'nama_kategori' => $this->request->getPost('nama_kategori'),
-            'kode_kategori' => $this->kategoriModel->generateKodeKategori(), // Gunakan kode otomatis
+            'kode_kategori' => $this->kategoriModel->generateKodeKategori(),
             'created_at' => date('Y-m-d H:i:s'),
         ]);
 
@@ -57,5 +57,17 @@ class KategoriController extends BaseController
     {
         $this->kategoriModel->delete($id);
         return redirect()->to(base_url('owner/kategori'))->with('success', 'Kategori berhasil dihapus!');
+    }
+
+    public function deleted()
+    {
+        $data['kategori'] = $this->kategoriModel->onlyDeleted()->findAll();
+        return view('admin/kategori/deleted', $data);
+    }
+
+    public function restore($id)
+    {
+        $this->kategoriModel->restoreKategori($id);
+        return redirect()->to(base_url('owner/kategori/deleted'))->with('success', 'Kategori berhasil dipulihkan!');
     }
 }
