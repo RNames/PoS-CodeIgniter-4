@@ -1,11 +1,18 @@
 <?= $this->include('admin/templates/header') ?>
 <?= $this->include('admin/templates/sidebar') ?>
 
-<div class="container">
-    <h2>Detail Member</h2>
+<div class="container p-5 pt-3 mb-3 mr-5 bg-white border rounded">
+    <div class="row">
+        <div class="col-2">
+            <a href="<?= base_url('owner/pengaturan-member') ?>" class="btn btn-secondary"><i class="fas fa-fw fa-angle-left"></i>Kembali</a>
+        </div>
+        <div class="col-8">
+            <h2 class="text-center">Detail Member</h2>
+        </div>
+    </div>
     <div class="card">
         <div class="card-body">
-            <table class="table">
+            <table class="table table-striped">
                 <tr>
                     <th>ID</th>
                     <td><?= esc($member['id']) ?></td>
@@ -35,15 +42,6 @@
                     <td><?= esc($member['tipe_member']) ?></td>
                 </tr>
             </table>
-            <a href="<?= base_url('owner/pengaturan-member') ?>" class="btn btn-secondary">
-                Kembali
-            </a>
-            <a href="<?= base_url('owner/pengaturan-member/edit/' . $member['id']) ?>" class="btn btn-warning">
-                Edit
-            </a>
-            <button class="deleteBtn btn btn-danger" data-id="<?= $member['id'] ?>">
-                Hapus
-            </button>
         </div>
     </div>
 </div>

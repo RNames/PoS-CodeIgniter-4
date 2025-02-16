@@ -5,9 +5,17 @@
     <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
 <?php endif; ?>
 
+<div class="container p-5 pt-3 mb-3 mr-5 bg-white border rounded">
 
-<div class="container">
-    <h2>Tambah Member</h2>
+    <div class="row">
+        <div class="col-2">
+            <a href="<?= base_url('owner/pengaturan-member') ?>" class="btn btn-secondary"><i class="fas fa-fw fa-angle-left"></i>Kembali</a>
+        </div>
+        <div class="col-8">
+            <h2 class="text-center">Tambah Member</h2>
+        </div>
+    </div>
+
     <form id="memberForm" action="<?= base_url('owner/pengaturan-member/store') ?>" method="post">
 
         <div class="form-group">
@@ -50,7 +58,7 @@
         </div>
 
 
-        <button type="button" class="btn btn-success" id="submitBtn">Simpan</button>
+        <button type="button" class="btn btn-block btn-success" id="submitBtn">Simpan</button>
     </form>
 </div>
 

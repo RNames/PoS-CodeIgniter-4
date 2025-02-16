@@ -11,7 +11,6 @@
     <a  href="<?= base_url('owner/barang/create') ?>" class="btn btn-primary mb-3 mt-3">Tambah Barang</a>
 
     <table class="table table-sm text-center">
-        <thead>
             <tr>
                 <th>Kode Barang</th>
                 <th>Nama Barang</th>
@@ -24,7 +23,6 @@
                 <th>Total Stok</th>
                 <th>Aksi</th>
             </tr>
-        </thead>
         <tbody>
             <?php foreach ($barang as $b) : ?>
                 <tr>

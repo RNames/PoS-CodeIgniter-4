@@ -5,6 +5,7 @@ namespace App\Controllers\Owner;
 use App\Controllers\BaseController;
 use App\Models\PetugasModel;
 use App\Models\TokoModel;
+use App\Models\MemberModel;
 use App\Models\LogsModel;
 
 class SetPetugasController extends BaseController
@@ -12,9 +13,11 @@ class SetPetugasController extends BaseController
     protected $petugasModel;
     protected $tokoModel;
     protected $logsModel;
+    protected $memberModel;
 
     public function __construct()
     {
+        $this->memberModel = new MemberModel();
         $this->petugasModel = new PetugasModel();
         $this->tokoModel = new TokoModel();
         $this->logsModel = new LogsModel();
@@ -45,7 +48,7 @@ class SetPetugasController extends BaseController
 
         return view('admin/set_petugas/nonaktif', $data);
     }
-    
+
 
     public function create()
     {
@@ -57,6 +60,11 @@ class SetPetugasController extends BaseController
     {
         $email = $this->request->getPost('email');
         $nm_petugas = $this->request->getPost('nm_petugas');
+
+        // Check if the email already exists in members
+        if ($this->memberModel->where('email', $email)->first()) {
+            return redirect()->back()->with('error', 'Email sudah terdaftar sebagai member!')->withInput();
+        }
 
         if ($this->petugasModel->where('email', $email)->first()) {
             return redirect()->back()->with('error', 'Email sudah terdaftar!')->withInput();
@@ -75,7 +83,7 @@ class SetPetugasController extends BaseController
         ];
         $this->petugasModel->save($data);
 
-        unset($data['password']); // Jangan simpan password di logs
+        unset($data['password']); // Don't save password in logs
 
         $this->logsModel->save([
             'id_petugas' => session()->get('id'),
@@ -103,6 +111,12 @@ class SetPetugasController extends BaseController
         $email = $this->request->getPost('email');
         $existingUser = $this->petugasModel->where('email', $email)->where('id !=', $id)->first();
 
+        // Check if the email already exists in members
+        if ($this->memberModel->where('email', $email)->first()) {
+            return redirect()->back()->with('error', 'Email sudah terdaftar sebagai member!')->withInput();
+        }
+
+        // Check if the email is already used by another petugas
         if ($existingUser) {
             return redirect()->back()->with('error', 'Email sudah digunakan oleh petugas lain!')->withInput();
         }
@@ -121,7 +135,6 @@ class SetPetugasController extends BaseController
 
         $this->petugasModel->update($id, $newData);
 
-        // Perbaiki akses properti dari object ke array sebelum menyimpannya di logs
         $logOldData = [
             'nm_petugas' => $oldData->nm_petugas,
             'email'      => $oldData->email

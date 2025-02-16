@@ -2,7 +2,7 @@
 <ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?= base_url('dashboard') ?>">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?= base_url('petugas/dashboard') ?>">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-cash-register"></i>
         </div>
@@ -14,55 +14,32 @@
 
     <!-- Nav Item - Home -->
     <li class="nav-item active">
-        <a class="nav-link" href="<?= base_url('dashboard') ?>">
+        <a class="nav-link" href="<?= base_url('petugas/dashboard') ?>">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Home</span>
         </a>
     </li>
 
-    <!-- Divider -->
-    <hr class="sidebar-divider my-0">
-
-    <!-- Nav Item - Data Produk -->
     <li class="nav-item active">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-            <i class="fas fa-fw fa-database"></i>
-            <span>Data Produk</span>
+        <a class="nav-link" href="<?= base_url('petugas/transaksi') ?>">
+            <i class="fas fa-fw fa-cash-register"></i>
+            <span>Transaksi</span>
         </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="<?= base_url('barang') ?>">Barang</a>
-                <a class="collapse-item" href="<?= base_url('kategori') ?>">Kategori</a>
-            </div>
-        </div>
     </li>
 
     <!-- Nav Item - Transaksi -->
     <li class="nav-item active">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapse3">
             <i class="fas fa-fw fa-desktop"></i>
-            <span>Transaksi</span>
+            <span>Laporan</span>
         </a>
         <div id="collapse3" class="collapse" aria-labelledby="heading3" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="<?= base_url('jual') ?>">Transaksi Jual</a>
-                <a class="collapse-item" href="<?= base_url('laporan') ?>">Laporan Penjualan</a>
+                <a class="collapse-item" href="<?= base_url('petugas/laporan') ?>">Laporan Transaksi</a>
+                <a class="collapse-item" href="<?= base_url('petugas/laporan/penjualan') ?>">Laporan Penjualan</a>
             </div>
         </div>
     </li>
-
-    <!-- Divider -->
-    <hr class="sidebar-divider my-0">
-
-    <li class="nav-item active">
-        <a class="nav-link" href="<?= base_url('pengaturan/petugas') ?>">
-            <i class="fas fa-fw fa-cogs"></i>
-            <span>Pengaturan Member</span>
-        </a>
-    </li>
-
-    <!-- Divider -->
-    <hr class="sidebar-divider my-0">
 
     <li class="nav-item active">
         <a class="nav-link" href="<?= base_url('logout') ?>">
@@ -72,7 +49,7 @@
     </li>
 
     <!-- Divider -->
-    <hr class="sidebar-divider my-0">
+    <hr class="sidebar-divider my-0 mb-3">
 
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
@@ -97,37 +74,23 @@
             </button>
 
             <!-- Store Name and Address -->
-            <h5 class="d-lg-block d-none mt-2">
+            <h2 class="d-lg-block d-none mt-2">
                 <b>
-                    <?= isset($toko['nama_toko']) ? esc($toko['nama_toko']) : 'Default Store Name'; ?>,
-                    <?= isset($toko['alamat_toko']) ? esc($toko['alamat_toko']) : 'Default Address'; ?>
+                    <?= ucfirst(str_replace('-', ' ', service('uri')->getSegment(2) ?? 'Dashboard')); ?>
                 </b>
-            </h5>
+            </h2>
 
             <!-- Topbar Navbar -->
             <ul class="navbar-nav ml-auto">
 
                 <!-- User Information -->
                 <li class="nav-item dropdown no-arrow">
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img class="img-profile rounded-circle" src="<?= base_url('assets/img/' . session()->get('gambar') ?? 'default-profile.png') ?>" alt="User Image">
+                    <span class="nav-link dropdown-toggle" role="button">
+                        <img class="img-profile rounded-circle" src="<?= base_url('assets/img/default-profile.png') ?>" alt="User Image">
                         <span class="mr-2 d-none d-lg-inline text-gray-600 small ml-2">
                             Hallo <?= session()->get('roles') ?>, <?= session()->get('nama') ?>
                         </span>
-                        <i class="fas fa-angle-down"></i>
-                    </a>
-                    <!-- Dropdown - User Information -->
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="<?= base_url('user/profile') ?>">
-                            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Profile
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="<?= base_url('logout') ?>">
-                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Logout
-                        </a>
-                    </div>
+                    </span>
                 </li>
             </ul>
         </nav>

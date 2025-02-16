@@ -1,7 +1,7 @@
 <?= $this->include('admin/templates/header') ?>
 <?= $this->include('admin/templates/sidebar') ?>
 
-<div class="container">
+<div class="container p-5 pt-3 mb-3 mr-5 bg-white border rounded">
     <h2>Daftar Member</h2>
     <div class="d-flex gap-2 mb-4">
         <a href="<?= base_url('owner/pengaturan-member/create') ?>" class="btn btn-primary">Tambah Member</a>
@@ -10,8 +10,8 @@
     <table class="table">
 
         <tr>
-            <th>Nama</th>
-            <th>Email</th>
+            <th >Nama</th>
+            <th class="text-center">Email</th>
             <th class="text-center">No HP</th>
             <th class="text-center">Poin</th>
             <th class="text-center">Tipe Member</th>
@@ -22,13 +22,13 @@
             <?php foreach ($members as $m) : ?>
                 <tr>
                     <td><?= esc($m['nm_member']) ?></td>
-                    <td><?= esc($m['email']) ?></td>
+                    <td class="text-center" ><?= esc($m['email']) ?></td>
                     <td class="text-center"><?= esc($m['no_hp']) ?></td>
                     <td class="text-center"><?= esc($m['poin']) ?></td>
                     <td class="text-center"><?= esc($m['tipe_member']) ?></td>
                     <td class="text-center">
-                        <a href="<?= base_url('owner/pengaturan-member/detail/' . $m['id']) ?>" class="btn btn-info">
-                            <i class='fas fa-eye' style='font-size:20px'></i> Detail
+                        <a href="<?= base_url('owner/pengaturan-member/detail/' . $m['id']) ?>" class="btn btn-primary">
+                            <i class='fas fa-info-circle' style='font-size:20px'></i> Detail
                         </a>
                         <a href="<?= base_url('owner/pengaturan-member/edit/' . $m['id']) ?>" class="btn btn-warning">
                             <i class='fas fa-edit' style='font-size:20px'></i> Edit

@@ -1,8 +1,8 @@
-<?= $this->include('admin/templates/header') ?>
-<?= $this->include('admin/templates/sidebar') ?>
+<?= $this->include('petugas/templates/header') ?>
+<?= $this->include('petugas/templates/sidebar') ?>
 
 <div class="container p-5 pt-4 mb-3 mr-5 bg-white border rounded">
-    <form id="transaksiForm" action="<?= base_url('owner/transaksi/proses') ?>" method="post">
+    <form id="transaksiForm" action="<?= base_url('petugas/transaksi/proses') ?>" method="post">
         <input type="hidden" name="tipe_member" id="tipe_member">
 
         <div class="form-group container mb-4 row row-cols-2 g-3">
@@ -352,7 +352,7 @@
                 cancelButtonText: 'Tutup'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.open('<?= base_url('owner/transaksi/cetak_nota/') . session()->getFlashdata('transaksi_berhasil')['id_transaksi'] ?>', '_blank');
+                    window.open('<?= base_url('petugas/transaksi/cetak_nota/') . session()->getFlashdata('transaksi_berhasil')['id_transaksi'] ?>', '_blank');
                 }
             });
         <?php endif; ?>
@@ -360,5 +360,4 @@
 </script>
 
 
-
-<?= $this->include('admin/templates/footer') ?>
+<?= $this->include('petugas/templates/footer') ?>

@@ -5,7 +5,6 @@
     <h3>Daftar Petugas Nonaktif</h3>
     <a style="margin-bottom: 10px;" href="<?= base_url('owner/pengaturan-petugas') ?>" class="btn btn-secondary">Kembali ke Petugas Aktif</a>
     <table class="table text-center">
-        <thead>
             <tr>
                 <th>ID</th>
                 <th>Nama</th>
@@ -13,7 +12,6 @@
                 <th>Roles</th>
                 <th>Aksi</th>
             </tr>
-        </thead>
         <tbody>
             <?php foreach ($inactivePetugas as $p) : ?>
                 <tr>

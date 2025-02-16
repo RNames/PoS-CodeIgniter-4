@@ -4,16 +4,18 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\PetugasModel;
-use App\Models\UserModel;
+use App\Models\MemberModel;
 use App\Models\LogsModel;
 
 class Loginctrl extends BaseController
 {
     protected $logsModel;
+    protected $memberModel;
 
     public function __construct()
     {
         $this->logsModel = new LogsModel(); // Inisialisasi logsModel
+        $this->memberModel = new MemberModel(); // Inisialisasi memberModel
     }
 
     public function index()
@@ -27,19 +29,28 @@ class Loginctrl extends BaseController
     public function process()
     {
         $petugas = new PetugasModel();
+        $member = $this->memberModel; // Instance MemberModel
         $email = $this->request->getVar('email');
         $password = $this->request->getVar('password');
 
-        // Ambil data petugas (termasuk yang sudah dihapus dengan soft delete)
+        // Check if user is a petugas first
         $dataUser = $petugas->getUserByEmail($email);
 
-        if ($dataUser) {
-            $id = $dataUser->id;
+        // If user is not found in petugas model, check if they are a member
+        if (!$dataUser) {
+            $dataUser = $member->where('email', $email)->first();
+            if ($dataUser) {
+                // Member login, display access restriction message
+                session()->setFlashdata('status_error', 'Anda tidak memiliki akses. Hanya petugas yang dapat login.');
+                return redirect()->back();
+            }
+        }
 
-            // Ambil data petugas berdasarkan ID termasuk yang sudah dihapus (soft delete)
+        if ($dataUser) {
+            // Check if it's a petugas login and validate password
+            $id = $dataUser->id;
             $dataPetugas = $petugas->withDeleted()->find($id);
 
-            // Pastikan data petugas ada (tidak null)
             if ($dataPetugas === null) {
                 session()->setFlashdata('error', 'Data petugas tidak ditemukan.');
                 return redirect()->back();
@@ -48,7 +59,7 @@ class Loginctrl extends BaseController
             // Cek apakah akun telah dinonaktifkan (soft delete)
             if ($dataPetugas->deleted_at !== null) {
                 session()->setFlashdata('status_error', 'Akun Anda telah dinonaktifkan! Hubungi admin untuk informasi lebih lanjut.');
-                return redirect()->back(); // Hentikan proses lebih lanjut
+                return redirect()->back(); 
             }
 
             // Verifikasi password jika akun tidak dinonaktifkan
@@ -69,7 +80,7 @@ class Loginctrl extends BaseController
                     'time' => date('Y-m-d H:i:s')
                 ]);
 
-                // Redirect berdasarkan role
+                // Redirect based on role
                 if ($dataPetugas->roles === 'owner') {
                     return redirect()->to(base_url('owner/dashboard'));
                 } elseif ($dataPetugas->roles === 'petugas') {

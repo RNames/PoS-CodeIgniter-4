@@ -4,16 +4,19 @@ namespace App\Controllers\Owner;
 
 use App\Controllers\BaseController;
 use App\Models\MemberModel;
+use App\Models\PetugasModel;
 use App\Models\LogsModel;
 
 class SetMemberController extends BaseController
 {
     protected $memberModel;
+    protected $petugasModel;
     protected $logsModel;
 
     public function __construct()
     {
         $this->memberModel = new MemberModel();
+        $this->petugasModel = new PetugasModel();
         $this->logsModel = new LogsModel();
     }
 
@@ -36,15 +39,19 @@ class SetMemberController extends BaseController
         return view('admin/member/create', ['memberTipe3Exists' => $memberTipe3Exists]);
     }
 
-
     public function store()
     {
         $email = $this->request->getPost('email');
         $no_hp = $this->request->getPost('no_hp');
         $id_petugas = session()->get('id');
 
+        // Check if the email already exists in petugas
+        if ($this->petugasModel->where('email', $email)->first()) {
+            return redirect()->back()->with('error', 'Email sudah digunakan oleh petugas!')->withInput();
+        }
+
         if ($this->memberModel->where('email', $email)->first()) {
-            return redirect()->back()->with('error', 'Email sudah terdaftar!')->withInput();
+            return redirect()->back()->with('error', 'Email sudah terdaftar sebagai member!')->withInput();
         }
 
         if ($this->memberModel->where('no_hp', $no_hp)->first()) {
@@ -76,19 +83,22 @@ class SetMemberController extends BaseController
         return redirect()->to(base_url('owner/pengaturan-member'))->with('success', 'Member berhasil ditambahkan!');
     }
 
-    public function edit($id)
-    {
-        $data['member'] = $this->memberModel->find($id);
-        return view('admin/member/edit', $data);
-    }
-
     public function update($id)
     {
         $email = $this->request->getPost('email');
         $no_hp = $this->request->getPost('no_hp');
         $id_petugas = session()->get('id');
 
+        // Check if the email already exists in petugas
+        if ($this->petugasModel->where('email', $email)->first()) {
+            return redirect()->back()->with('error', 'Email sudah digunakan oleh petugas!')->withInput();
+        }
+
+        // Check if the email is already taken by another member
         $oldData = $this->memberModel->find($id);
+        if ($this->memberModel->where('email', $email)->where('id !=', $id)->first()) {
+            return redirect()->back()->with('error', 'Email sudah terdaftar sebagai member lain!')->withInput();
+        }
 
         $newData = [
             'nm_member'   => $this->request->getPost('nm_member'),
@@ -99,18 +109,16 @@ class SetMemberController extends BaseController
             'tipe_member' => $this->request->getPost('tipe_member'),
         ];
 
-        if ($oldData != $newData) {
-            $this->memberModel->update($id, $newData);
+        $this->memberModel->update($id, $newData);
 
-            $this->logsModel->save([
-                'id_petugas' => $id_petugas,
-                'action'     => 'edit',
-                'msg'        => "Mengedit member ID: $id",
-                'old_data'   => json_encode($oldData),
-                'new_data'   => json_encode($newData),
-                'time'       => date('Y-m-d H:i:s'),
-            ]);
-        }
+        $this->logsModel->save([
+            'id_petugas' => $id_petugas,
+            'action'     => 'edit',
+            'msg'        => "Mengedit member ID: $id",
+            'old_data'   => json_encode($oldData),
+            'new_data'   => json_encode($newData),
+            'time'       => date('Y-m-d H:i:s'),
+        ]);
 
         return redirect()->to(base_url('owner/pengaturan-member'))->with('success', 'Member berhasil diperbarui!');
     }

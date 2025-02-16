@@ -8,7 +8,6 @@
         <a href="<?= base_url('owner/pengaturan-petugas/nonaktif') ?>" class="btn btn-secondary">Lihat Petugas Nonaktif</a>
     </div>
     <table class="table text-center">
-        <thead>
             <tr>
                 <th>ID</th>
                 <th>Nama</th>
@@ -16,7 +15,6 @@
                 <th>Roles</th>
                 <th>Aksi</th>
             </tr>
-        </thead>
         <tbody>
             <?php foreach ($activePetugas as $p) : ?>
                 <tr>

@@ -5,9 +5,17 @@
     <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
 <?php endif; ?>
 
+<div class="container p-5 pt-3 mb-3 mr-5 bg-white border rounded">
 
-<div class="container">
-    <h2>Edit Member</h2>
+    <div class="row">
+        <div class="col-2">
+            <a href="<?= base_url('owner/pengaturan-member') ?>" class="btn btn-secondary"><i class="fas fa-fw fa-angle-left"></i>Kembali</a>
+        </div>
+        <div class="col-8">
+            <h2 class="text-center">Edit Member</h2>
+        </div>
+    </div>
+
     <form id="memberForm" action="<?= base_url('owner/pengaturan-member/update/' . $member['id']) ?>" method="post">
         <div class="form-group">
             <label>Nama</label>
@@ -36,11 +44,14 @@
             <select name="tipe_member" id="tipe_member" class="form-control" required>
                 <option value="1" <?= ($member['tipe_member'] == 1) ? 'selected' : '' ?>>Tipe 1</option>
                 <option value="2" <?= ($member['tipe_member'] == 2) ? 'selected' : '' ?>>Tipe 2</option>
-                <option value="3" <?= ($member['tipe_member'] == 3) ? 'selected' : '' ?>>Tipe 3</option>
+                <?php if (!$disableTipe3): ?>
+                    <option value="3" <?= ($member['tipe_member'] == 3) ? 'selected' : '' ?>>Tipe 3</option>
+                <?php endif; ?>
             </select>
+
         </div>
 
-        <button type="button" id="submitBtn" class="btn btn-success">Update</button>
+        <button type="button" id="submitBtn" class="btn btn-block btn-success">Update</button>
     </form>
 </div>
 

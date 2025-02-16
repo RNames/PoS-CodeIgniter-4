@@ -1,11 +1,11 @@
-<?= $this->include('admin/templates/header') ?>
-<?= $this->include('admin/templates/sidebar') ?>
+<?= $this->include('petugas/templates/header') ?>
+<?= $this->include('petugas/templates/sidebar') ?>
 
 <div class="container p-5 pt-4 pb-4 mb-3 mr-5 bg-white border rounded">
     <h2><?= isset($date) ? 'Laporan Penjualan untuk Tanggal: ' . $date : 'Laporan Penjualan' ?></h2>
 
     <div class="container mt-4 mb-4">
-        <form action="<?= site_url('owner/laporan/penjualan') ?>" method="get">
+        <form action="<?= site_url('petugas/laporan/penjualan') ?>" method="get">
 
             <div class="row g-3 mb-2">
                 <div class="col-md-6">
@@ -24,10 +24,10 @@
                     <button type="submit" class="btn btn-block btn-primary">Filter</button>
                 </div>
                 <div class="col">
-                    <a href="<?= base_url('owner/laporan/penjualan') ?>" class="btn btn-block btn-secondary">Reset</a>
+                    <a href="<?= base_url('petugas/laporan/penjualan') ?>" class="btn btn-block btn-secondary">Reset</a>
                 </div>
                 <div class="col">
-                    <a href="<?= base_url('owner/laporan/export_pdf?date=' . $date . '&kode_transaksi=' . $kodeTransaksi) ?>" class="btn btn-block btn-danger">Export ke PDF</a>
+                    <a href="<?= base_url('petugas/laporan/export_pdf?date=' . $date . '&kode_transaksi=' . $kodeTransaksi) ?>" class="btn btn-block btn-danger">Export ke PDF</a>
                 </div>
             </div>
         </form>
@@ -74,4 +74,4 @@
     }
 </script>
 
-<?= $this->include('admin/templates/footer') ?>
+<?= $this->include('petugas/templates/footer') ?>

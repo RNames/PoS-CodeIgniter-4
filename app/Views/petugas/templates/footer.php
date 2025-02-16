@@ -1,9 +1,9 @@
 </div> <!-- /.container-fluid -->
 </div> <!-- End of Main Content -->
 
-<footer class="sticky-footer bg-white">
+<footer class="sticky-footer bg-white shadow-lg">
     <div class="container my-auto">
-        <div class="copyright text-center my-auto">
+        <div class="copyright text-center my-auto ">
             <span>&copy; <?= date('Y') ?> - Sistem Penjualan Barang Berbasis Web | BY DAFFA</span>
         </div>
     </div>

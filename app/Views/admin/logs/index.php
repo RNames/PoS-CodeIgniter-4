@@ -19,7 +19,6 @@
 
     <!-- Log Table -->
     <table class="table">
-        <thead>
             <tr>
                 <th>No</th>
                 <th>Nama Petugas</th>
@@ -28,7 +27,6 @@
                 <th class="text-center">Waktu</th>
                 <th class="text-center">Opsi</th>
             </tr>
-        </thead>
         <tbody id="log-table-body">
             <!-- Data akan diisi oleh AJAX -->
         </tbody>
@@ -87,8 +85,8 @@
                                 <td>${shortMsg}</td>
                                 <td class="text-center">${log.time}</td>
                                 <td class="text-center">
-                                    <a href="<?= base_url('owner/logs/detail/') ?>${log.id}" class="btn btn-info">
-                                        <i class="fas fa-eye" style="font-size:20px"></i> Detail
+                                    <a href="<?= base_url('owner/logs/detail/') ?>${log.id}" class="btn btn-primary">
+                                        <i class="fas fa-info-circle" style="font-size:20px"></i> Detail
                                     </a>
                                 </td>
                             </tr>

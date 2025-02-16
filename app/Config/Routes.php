@@ -85,16 +85,17 @@ $routes->group('owner', ['filter' => 'role:owner'], function ($routes) {
 // **GROUP PETUGAS**
 $routes->group('petugas', ['filter' => 'role:petugas'], function ($routes) {
     $routes->get('dashboard', 'Petugas\PetugasController::index');
+
+    $routes->get('transaksi', 'Petugas\TransaksiController::index');
+    $routes->post('transaksi/proses', 'Petugas\TransaksiController::proses');
+    $routes->get('transaksi/cetak_nota/(:num)', 'Petugas\TransaksiController::cetak_nota/$1');
+
+    //Laporan
+    $routes->get('laporan', 'Petugas\LaporanController::index');
+    $routes->get('laporan/detail/(:num)', 'Petugas\LaporanController::detail/$1');
+    $routes->get('laporan/daily_report/(:any)', 'Petugas\LaporanController::dailyReport/$1');
+    $routes->get('laporan/penjualan', 'Petugas\LaporanController::penjualan');
+
+    $routes->get('laporan/export_pdf', 'Petugas\LaporanController::exportPdf');
 });
 
-// **GROUP MEMBER**
-$routes->group('member', ['filter' => 'role:owner,petugas'], function ($routes) {
-
-    // CRUD Member
-    $routes->get('member', 'SetMemberController::index'); // Menampilkan daftar member
-    $routes->get('member/create', 'SetMemberController::create'); // Form tambah member
-    $routes->post('member/store', 'SetMemberController::store'); // Proses simpan member
-    $routes->get('member/edit/(:num)', 'SetMemberController::edit/$1'); // Form edit member
-    $routes->post('member/update/(:num)', 'SetMemberController::update/$1'); // Proses update
-    $routes->get('member/delete/(:num)', 'SetMemberController::delete/$1'); // Hapus member
-});

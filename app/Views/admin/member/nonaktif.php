@@ -1,7 +1,7 @@
 <?= $this->include('admin/templates/header') ?>
 <?= $this->include('admin/templates/sidebar') ?>
 
-<div class="container">
+<div class="container p-5 pt-3 mb-3 mr-5 bg-white border rounded">
     <h2>Daftar Member Nonaktif</h2>
     <a style="margin-bottom: 10px;" href="<?= base_url('owner/pengaturan-member') ?>" class="btn btn-secondary">Kembali ke Member Aktif</a>
     <table class="table">
