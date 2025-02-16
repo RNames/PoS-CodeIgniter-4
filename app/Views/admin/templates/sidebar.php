@@ -5,7 +5,7 @@
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?= base_url('owner/dashboard') ?>">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-cash-register"></i>
-        </div>  
+        </div>
         <div class="sidebar-brand-text mx-3">KASIRAN</div>
     </a>
 
@@ -27,8 +27,12 @@
         </a>
     </li>
 
-    <!-- Divider -->
-    <hr class="sidebar-divider my-0">
+    <li class="nav-item active">
+        <a class="nav-link" href="<?= base_url('owner/transaksi') ?>">
+            <i class="fas fa-fw fa-cash-register"></i>
+            <span>Transaksi</span>
+        </a>
+    </li>
 
     <!-- Nav Item - Data Produk -->
     <li class="nav-item active">
@@ -48,22 +52,20 @@
     <li class="nav-item active">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapse3">
             <i class="fas fa-fw fa-desktop"></i>
-            <span>Transaksi</span>
+            <span>Laporan</span>
         </a>
         <div id="collapse3" class="collapse" aria-labelledby="heading3" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="<?= base_url('owner/transaksi') ?>">Transaksi Jual</a>
-                <a class="collapse-item" href="<?= base_url('owner/laporan') ?>">Laporan Penjualan</a>
+                <a class="collapse-item" href="<?= base_url('owner/laporan') ?>">Laporan Transaksi</a>
+                <a class="collapse-item" href="<?= base_url('owner/laporan/penjualan') ?>">Laporan Penjualan</a>
             </div>
         </div>
     </li>
 
-    <!-- Divider -->
-    <hr class="sidebar-divider my-0">
 
     <li class="nav-item active">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse4" aria-expanded="true" aria-controls="collapse4">
-            <i class="fas fa-fw fa-cogs"></i>
+            <i class="fas fa-fw fa-user-nurse"></i>
             <span>Pengaturan Petugas</span>
         </a>
         <div id="collapse4" class="collapse" aria-labelledby="heading4" data-parent="#accordionSidebar">
@@ -76,7 +78,7 @@
 
     <li class="nav-item active">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse5" aria-expanded="true" aria-controls="collapse5">
-            <i class="fas fa-fw fa-cogs"></i>
+            <i class="fas fa-fw fa-user"></i>
             <span>Pengaturan Member</span>
         </a>
         <div id="collapse5" class="collapse" aria-labelledby="heading5" data-parent="#accordionSidebar">
@@ -87,9 +89,6 @@
         </div>
     </li>
 
-
-    <!-- Divider -->
-    <hr class="sidebar-divider my-0">
 
     <li class="nav-item active">
         <a class="nav-link" href="<?= base_url('logout') ?>">
