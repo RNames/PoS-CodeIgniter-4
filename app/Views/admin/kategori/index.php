@@ -1,7 +1,7 @@
 <?= $this->include('admin/templates/header') ?>
 <?= $this->include('admin/templates/sidebar') ?>
 
-<div class="container">
+<div class="container p-5 pt-4 pb-4 mb-3 mr-5 bg-white border rounded">
     <?php if (session()->getFlashdata('error')) : ?>
         <div class="alert alert-danger text-center">
             <?= session()->getFlashdata('error') ?>
