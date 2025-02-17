@@ -27,30 +27,39 @@ class LaporanController extends BaseController
         $this->detailTransaksiModel = new DetailTransaksiModel();
         $this->barangModel = new BarangModel();
     }
+
     public function index()
     {
-        // Ambil input filter dari GET request
+        // Ambil filter dari input
         $startDate = $this->request->getGet('start_date');
         $endDate = $this->request->getGet('end_date');
         $kodeTransaksi = $this->request->getGet('kode_transaksi');
+        $kasirId = $this->request->getGet('kasir_id'); // Filter untuk kasir
 
-        // Query dengan join untuk mendapatkan data laporan dengan detail
+        // Query laporan transaksi
         $query = $this->transaksiModel
             ->select('laporan.*, 
-              petugas.nm_petugas as nama_kasir, 
-              member.nm_member as nama_member, 
-              member.tipe_member, 
-              laporan.kode_transaksi,
-              (laporan.total_belanja * (laporan.diskon / 100)) as diskon_rp,
-              (laporan.total_belanja * 0.12) as ppn,
-              (laporan.total_belanja + (laporan.total_belanja * 0.12)) as total_setelah_ppn')
+                petugas.nm_petugas as nama_kasir, 
+                member.nm_member as nama_member, 
+                member.tipe_member, 
+                laporan.kode_transaksi,
+                ROUND((laporan.total_belanja * (laporan.diskon / 100)) / 100) * 100 AS diskon_rp,
+                ROUND((laporan.total_belanja * 0.12) / 100) * 100 AS ppn,
+                ROUND((laporan.total_belanja + (laporan.total_belanja * 0.12)) / 100) * 100 AS total_setelah_ppn,
+                ROUND(laporan.total_akhir / 100) * 100 AS total_akhir
+            ')
             ->join('petugas', 'petugas.id = laporan.id_petugas')
             ->join('member', 'member.id = laporan.id_member');
 
+        // Filter berdasarkan kasir jika dipilih
+        if (!empty($kasirId)) {
+            $query->where('laporan.id_petugas', $kasirId);
+        }
+
+        // Filter berdasarkan kode transaksi jika ada input
         if (!empty($kodeTransaksi)) {
             $query->where('laporan.kode_transaksi', $kodeTransaksi);
         }
-
 
         // Filter berdasarkan rentang tanggal jika ada input
         if (!empty($startDate) && !empty($endDate)) {
@@ -61,13 +70,18 @@ class LaporanController extends BaseController
         // Urutkan dari transaksi terbaru ke terlama
         $query->orderBy('tanggal_transaksi', 'DESC');
 
-        // Eksekusi query dan ambil data
+        // Eksekusi query
         $laporan = $query->findAll();
+
+        // Ambil daftar kasir untuk filter dropdown
+        $kasirList = $this->petugasModel->select('id, nm_petugas')->findAll();
 
         return view('admin/laporan/index', [
             'laporan' => $laporan,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'kasirList' => $kasirList,
+            'kasirId' => $kasirId,
         ]);
     }
 
@@ -79,9 +93,13 @@ class LaporanController extends BaseController
                   petugas.nm_petugas as nama_kasir, 
                   member.nm_member as nama_member, 
                   member.tipe_member, 
-                  (laporan.total_belanja * (laporan.diskon / 100)) as diskon_rp,
-                  (laporan.total_belanja * 0.12) as ppn,
-                  (laporan.total_belanja + (laporan.total_belanja * 0.12)) as total_setelah_ppn')
+                  ROUND((laporan.total_belanja * (laporan.diskon / 100)) / 100) * 100 AS diskon_rp,
+            ROUND((laporan.total_belanja * 0.12) / 100) * 100 AS ppn,
+            ROUND((laporan.total_belanja + (laporan.total_belanja * 0.12)) / 100) * 100 AS total_setelah_ppn,
+            ROUND(laporan.total_akhir / 100) * 100 AS total_akhir,
+            ROUND(laporan.total_bayar / 100) * 100 AS total_bayar_bulat,
+            GREATEST(ROUND(laporan.total_bayar / 100) * 100 - ROUND(laporan.total_akhir / 100) * 100, 0) AS total_kembalian,
+                  ')
             ->join('petugas', 'petugas.id = laporan.id_petugas')
             ->join('member', 'member.id = laporan.id_member')
             ->where('laporan.id', $id)
@@ -173,16 +191,31 @@ class LaporanController extends BaseController
 
     public function exportPdf()
     {
-        $date = $this->request->getGet('date'); // Ambil filter tanggal
+        $startDate = $this->request->getGet('start_date'); // Ambil filter tanggal mulai
+        $endDate = $this->request->getGet('end_date'); // Ambil filter tanggal akhir
         $kodeTransaksi = $this->request->getGet('kode_transaksi'); // Ambil filter kode transaksi
 
         $query = $this->detailTransaksiModel
-            ->select('laporan.kode_transaksi, laporan.tanggal_transaksi, barang.nama_barang, detail_laporan.jumlah, detail_laporan.total_harga')
+        ->select('
+        laporan.*, 
+        petugas.nm_petugas as nama_petugas, 
+        member.nm_member as nama_member, 
+        member.tipe_member, 
+        laporan.kode_transaksi,
+        laporan.total_belanja,
+        ROUND((laporan.total_belanja * laporan.diskon / 100) / 100) * 100 AS diskon_rupiah, 
+        laporan.poin_digunakan,
+        ROUND(laporan.total_akhir / 100) * 100 AS total_akhir
+        ')
             ->join('laporan', 'laporan.id = detail_laporan.id_laporan')
-            ->join('barang', 'barang.id = detail_laporan.barang_id');
+            ->join('barang', 'barang.id = detail_laporan.barang_id')
+            ->join('petugas', 'petugas.id = laporan.id_petugas')
+            ->join('member', 'member.id = laporan.id_member'); // Pastikan member di-join
 
-        if (!empty($date)) {
-            $query->where('DATE(laporan.tanggal_transaksi)', $date);
+
+        if (!empty($startDate) && !empty($endDate)) {
+            $query->where('laporan.tanggal_transaksi >=', $startDate)
+                ->where('laporan.tanggal_transaksi <=', $endDate);
         }
 
         if (!empty($kodeTransaksi)) {
@@ -191,8 +224,11 @@ class LaporanController extends BaseController
 
         $query->orderBy('laporan.tanggal_transaksi', 'DESC');
 
-        $data['report'] = $query->findAll();
-        $data['date'] = $date; // Kirim tanggal ke view
+        $data = [
+            'laporan' => $query->findAll(),
+            'startDate' => $startDate, // Kirim startDate ke view
+            'endDate' => $endDate, // Kirim endDate ke view
+        ];
 
         // Load tampilan laporan dalam bentuk HTML
         $html = view('admin/laporan_pdf', $data);
@@ -200,7 +236,7 @@ class LaporanController extends BaseController
         // Konfigurasi Dompdf
         $dompdf = new Dompdf();
         $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'potrait');
+        $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
         $dompdf->stream('laporan_penjualan.pdf', ["Attachment" => false]);
     }

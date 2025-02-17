@@ -27,18 +27,11 @@
         </a>
     </li>
 
-    <!-- Nav Item - Transaksi -->
     <li class="nav-item active">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapse3">
+        <a class="nav-link" href="<?= base_url('petugas/laporan') ?>">
             <i class="fas fa-fw fa-desktop"></i>
-            <span>Laporan</span>
+            <span>Laporan Transaksi</span>
         </a>
-        <div id="collapse3" class="collapse" aria-labelledby="heading3" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="<?= base_url('petugas/laporan') ?>">Laporan Transaksi</a>
-                <a class="collapse-item" href="<?= base_url('petugas/laporan/penjualan') ?>">Laporan Penjualan</a>
-            </div>
-        </div>
     </li>
 
     <li class="nav-item active">

@@ -80,6 +80,7 @@ $routes->group('owner', ['filter' => 'role:owner'], function ($routes) {
     $routes->get('laporan/penjualan', 'Owner\LaporanController::penjualan');
 
     $routes->get('laporan/export_pdf', 'Owner\LaporanController::exportPdf');
+    $routes->get('laporan/exportPdf', 'Owner\LaporanController::exportPdf');
 });
 
 // **GROUP PETUGAS**
@@ -106,7 +107,8 @@ $routes->group('petugas', ['filter' => 'role:petugas'], function ($routes) {
     $routes->get('laporan/detail/(:num)', 'Petugas\LaporanController::detail/$1');
     $routes->get('laporan/daily_report/(:any)', 'Petugas\LaporanController::dailyReport/$1');
     $routes->get('laporan/penjualan', 'Petugas\LaporanController::penjualan');
-
+    
+    $routes->get('laporan/exportPdf', 'Petugas\LaporanController::exportPdf');
     $routes->get('laporan/export_pdf', 'Petugas\LaporanController::exportPdf');
 });
 

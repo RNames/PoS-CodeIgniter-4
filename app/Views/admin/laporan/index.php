@@ -30,6 +30,11 @@
                 <div class="col">
                     <a href="<?= base_url('owner/laporan') ?>" class="btn btn-block btn-secondary">Reset</a>
                 </div>
+                <div class="col">
+                    <a href="<?= base_url('owner/laporan/exportPdf?start_date=' . ($startDate ?? '') . '&end_date=' . ($endDate ?? '')) ?>" class="btn btn-danger btn-block" target="_blank">
+                        <i class="fa fa-file-pdf"></i> Cetak Laporan
+                    </a>
+                </div>
             </div>
 
         </form>
@@ -37,14 +42,14 @@
 
 
         <table class="table mt-3 text-centered">
-                <tr>
-                    <th>Kode Transaksi</th>
-                    <th>Tanggal</th>
-                    <th>Kasir</th>
-                    <th>Member</th>
-                    <th>Total Akhir</th>
-                    <th>Aksi</th>
-                </tr>
+            <tr>
+                <th>Kode Transaksi</th>
+                <th>Tanggal</th>
+                <th>Kasir</th>
+                <th>Member</th>
+                <th>Total Akhir</th>
+                <th>Aksi</th>
+            </tr>
             <tbody>
                 <?php foreach ($laporan as $row) : ?>
                     <tr>
@@ -64,5 +69,6 @@
         </table>
 
     </div>
+</div>
 
-    <?= $this->include('admin/templates/footer') ?>
+<?= $this->include('admin/templates/footer') ?>

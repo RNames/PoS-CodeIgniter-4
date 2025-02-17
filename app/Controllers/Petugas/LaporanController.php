@@ -27,30 +27,39 @@ class LaporanController extends BaseController
         $this->detailTransaksiModel = new DetailTransaksiModel();
         $this->barangModel = new BarangModel();
     }
+
     public function index()
     {
+        // Ambil ID petugas yang login dari sesi
+        $idPetugas = session()->get('id');
+
+        if (!$idPetugas) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
         // Ambil input filter dari GET request
         $startDate = $this->request->getGet('start_date');
         $endDate = $this->request->getGet('end_date');
         $kodeTransaksi = $this->request->getGet('kode_transaksi');
 
-        // Query dengan join untuk mendapatkan data laporan dengan detail
         $query = $this->transaksiModel
             ->select('laporan.*, 
               petugas.nm_petugas as nama_kasir, 
               member.nm_member as nama_member, 
               member.tipe_member, 
               laporan.kode_transaksi,
-              (laporan.total_belanja * (laporan.diskon / 100)) as diskon_rp,
-              (laporan.total_belanja * 0.12) as ppn,
-              (laporan.total_belanja + (laporan.total_belanja * 0.12)) as total_setelah_ppn')
+              ROUND((laporan.total_belanja * (laporan.diskon / 100)) / 100) * 100 AS diskon_rp,
+              ROUND((laporan.total_belanja * 0.12) / 100) * 100 AS ppn,
+              ROUND((laporan.total_belanja + (laporan.total_belanja * 0.12)) / 100) * 100 AS total_setelah_ppn,
+              ROUND(laporan.total_akhir / 100) * 100 AS total_akhir,
+              ')
             ->join('petugas', 'petugas.id = laporan.id_petugas')
-            ->join('member', 'member.id = laporan.id_member');
+            ->join('member', 'member.id = laporan.id_member')
+            ->where('laporan.id_petugas', $idPetugas);
 
         if (!empty($kodeTransaksi)) {
             $query->where('laporan.kode_transaksi', $kodeTransaksi);
         }
-
 
         // Filter berdasarkan rentang tanggal jika ada input
         if (!empty($startDate) && !empty($endDate)) {
@@ -73,41 +82,50 @@ class LaporanController extends BaseController
 
     public function detail($id)
     {
-        // Ambil data transaksi berdasarkan ID
+        // Ambil ID petugas yang login dari sesi
+        $idPetugas = session()->get('id');
+
+        if (!$idPetugas) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu.');
+        }
+        
         $transaksi = $this->transaksiModel
-            ->select('laporan.*, 
-                  petugas.nm_petugas as nama_kasir, 
-                  member.nm_member as nama_member, 
-                  member.tipe_member, 
-                  (laporan.total_belanja * (laporan.diskon / 100)) as diskon_rp,
-                  (laporan.total_belanja * 0.12) as ppn,
-                  (laporan.total_belanja + (laporan.total_belanja * 0.12)) as total_setelah_ppn')
-            ->join('petugas', 'petugas.id = laporan.id_petugas')
-            ->join('member', 'member.id = laporan.id_member')
-            ->where('laporan.id', $id)
-            ->first();
+        ->select('laporan.*, 
+            petugas.nm_petugas as nama_kasir, 
+            member.nm_member as nama_member, 
+            member.tipe_member, 
+            ROUND((laporan.total_belanja * (laporan.diskon / 100)) / 100) * 100 AS diskon_rp,
+            ROUND((laporan.total_belanja * 0.12) / 100) * 100 AS ppn,
+            ROUND((laporan.total_belanja + (laporan.total_belanja * 0.12)) / 100) * 100 AS total_setelah_ppn,
+            ROUND(laporan.total_akhir / 100) * 100 AS total_akhir,
+            ROUND(laporan.total_bayar / 100) * 100 AS total_bayar_bulat,
+            GREATEST(ROUND(laporan.total_bayar / 100) * 100 - ROUND(laporan.total_akhir / 100) * 100, 0) AS total_kembalian,
+        ')
+        ->join('petugas', 'petugas.id = laporan.id_petugas')
+        ->join('member', 'member.id = laporan.id_member')
+        ->where('laporan.id', $id)
+        ->where('laporan.id_petugas', $idPetugas)
+        ->first();
+    
+    
 
         if (!$transaksi) {
-            return redirect()->to(base_url('petugas/laporan'))->with('error', 'Transaksi tidak ditemukan.');
+            return redirect()->to(base_url('petugas/laporan'))->with('error', 'Transaksi tidak ditemukan atau tidak diizinkan.');
         }
 
         // Ambil detail transaksi (barang yang dibeli)
-        $detailModel = new \App\Models\DetailTransaksiModel();
-        $barangModel = new \App\Models\BarangModel();
-
-        $detailTransaksi = $detailModel
+        $detailTransaksi = $this->detailTransaksiModel
             ->select('detail_laporan.*, barang.kode_barang, barang.nama_barang')
             ->join('barang', 'barang.id = detail_laporan.barang_id')
             ->where('detail_laporan.id_laporan', $id)
             ->findAll();
-
-
 
         return view('petugas/laporan/detail', [
             'transaksi' => $transaksi,
             'detailTransaksi' => $detailTransaksi
         ]);
     }
+
 
     // Inside the LaporanController
 
@@ -173,26 +191,48 @@ class LaporanController extends BaseController
 
     public function exportPdf()
     {
-        $date = $this->request->getGet('date'); // Ambil filter tanggal
-        $kodeTransaksi = $this->request->getGet('kode_transaksi'); // Ambil filter kode transaksi
+        $idPetugas = session()->get('id');
 
-        $query = $this->detailTransaksiModel
-            ->select('laporan.kode_transaksi, laporan.tanggal_transaksi, barang.nama_barang, detail_laporan.jumlah, detail_laporan.total_harga')
-            ->join('laporan', 'laporan.id = detail_laporan.id_laporan')
-            ->join('barang', 'barang.id = detail_laporan.barang_id');
-
-        if (!empty($date)) {
-            $query->where('DATE(laporan.tanggal_transaksi)', $date);
+        if (!$idPetugas) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu.');
         }
+
+        $startDate = $this->request->getGet('start_date');
+        $endDate = $this->request->getGet('end_date');
+        $kodeTransaksi = $this->request->getGet('kode_transaksi');
+
+        $query = $this->transaksiModel
+            ->select('
+        laporan.*, 
+        petugas.nm_petugas as nama_kasir, 
+        member.nm_member as nama_member, 
+        member.tipe_member, 
+        laporan.kode_transaksi,
+        laporan.total_belanja,
+        ROUND((laporan.total_belanja * laporan.diskon / 100) / 100) * 100 AS diskon_rupiah, 
+        laporan.poin_digunakan,
+        ROUND(laporan.total_akhir / 100) * 100 AS total_akhir
+    ')
+            ->join('petugas', 'petugas.id = laporan.id_petugas')
+            ->join('member', 'member.id = laporan.id_member')
+            ->where('laporan.id_petugas', $idPetugas);
+
+
 
         if (!empty($kodeTransaksi)) {
-            $query->like('laporan.kode_transaksi', $kodeTransaksi);
+            $query->where('laporan.kode_transaksi', $kodeTransaksi);
         }
 
-        $query->orderBy('laporan.tanggal_transaksi', 'DESC');
+        if (!empty($startDate) && !empty($endDate)) {
+            $query->where('tanggal_transaksi >=', $startDate)
+                ->where('tanggal_transaksi <=', $endDate);
+        }
 
-        $data['report'] = $query->findAll();
-        $data['date'] = $date; // Kirim tanggal ke view
+        $query->orderBy('tanggal_transaksi', 'DESC');
+
+        $data['laporan'] = $query->findAll();
+        $data['startDate'] = $startDate;
+        $data['endDate'] = $endDate;
 
         // Load tampilan laporan dalam bentuk HTML
         $html = view('petugas/laporan_pdf', $data);
@@ -200,8 +240,8 @@ class LaporanController extends BaseController
         // Konfigurasi Dompdf
         $dompdf = new Dompdf();
         $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'potrait');
+        $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
-        $dompdf->stream('laporan_penjualan.pdf', ["Attachment" => false]);
+        $dompdf->stream('laporan_transaksi.pdf', ["Attachment" => false]);
     }
 }

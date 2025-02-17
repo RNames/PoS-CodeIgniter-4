@@ -39,6 +39,17 @@ class SetMemberController extends BaseController
         return view('admin/member/create', ['memberTipe3Exists' => $memberTipe3Exists]);
     }
 
+    public function edit($id)
+    {
+        $data['member'] = $this->memberModel->find($id);
+
+        // Check if there is already a member with tipe_member == 3
+        $existingTipe3 = $this->memberModel->where('tipe_member', 3)->first();
+        $data['disableTipe3'] = $existingTipe3 ? true : false;
+
+        return view('admin/member/edit', $data);
+    }
+
     public function store()
     {
         $email = $this->request->getPost('email');

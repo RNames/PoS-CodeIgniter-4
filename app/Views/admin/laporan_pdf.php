@@ -3,62 +3,74 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Penjualan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Transaksi</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             font-size: 12px;
         }
 
-        table {
+        .title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
         }
 
-        th,
-        td {
+        .table th,
+        .table td {
             border: 1px solid black;
             padding: 8px;
             text-align: center;
         }
 
-        th {
+        .table th {
             background-color: #f2f2f2;
         }
     </style>
 </head>
 
 <body>
-    <h1 style="text-align: center;">LAPORAN PENJUALAN</h1>
-    <p style="text-align: center;"><?= isset($date) ? 'Tanggal: ' . date('d-m-Y', strtotime($date)) : 'All Time'; ?></p>
 
-    <table border="1" cellspacing="0" cellpadding="5">
+    <h2 class="title">Laporan Transaksi</h2>
+    <?php if ($startDate && $endDate) : ?>
+        <p>Periode: <?= esc($startDate) ?> s/d <?= esc($endDate) ?></p>
+    <?php endif; ?>
+
+    <table class="table">
         <thead>
             <tr>
                 <th>Kode Transaksi</th>
-                <th>Tanggal Transaksi</th>
-                <th>Nama Barang</th>
-                <th>Jumlah Terjual</th>
-                <th>Total Harga</th>
+                <th>Nama Kasir</th>
+                <th>Tanggal</th>
+                <th>Nama Pelanggan</th>
+                <th>Tipe Pelanggan</th>
+                <th>Total Belanja</th>
+                <th>Diskon (Rp)</th>
+                <th>Poin Digunakan</th>
+                <th>Total Akhir</th>
             </tr>
         </thead>
         <tbody>
-            <?php if (!empty($report)): ?>
-                <?php foreach ($report as $item): ?>
-                    <tr>
-                        <td><?= $item['kode_transaksi']; ?></td>
-                        <td><?= date('d-m-Y', strtotime($item['tanggal_transaksi'])); ?></td>
-                        <td><?= $item['nama_barang']; ?></td>
-                        <td><?= $item['jumlah']; ?></td>
-                        <td><?= number_format($item['total_harga'], 0, ',', '.'); ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
+            <?php foreach ($laporan as $row) : ?>
                 <tr>
-                    <td colspan="5" style="text-align: center;">Tidak ada data untuk tanggal ini.</td>
+                    <td><?= esc($row['kode_transaksi']) ?></td>
+                    <td><?= esc($row['nama_petugas']) ?></td>
+                    <td><?= esc($row['tanggal_transaksi']) ?></td>
+                    <td><?= esc($row['nama_member']) ?></td>
+                    <td><?= esc($row['tipe_member']) ?></td>
+                    <td>Rp <?= number_format($row['total_belanja'], 0, ',', '.') ?></td>
+                    <td>Rp <?= number_format($row['diskon_rupiah'], 0, ',', '.') ?></td>
+                    <td><?= esc($row['poin_digunakan']) ?></td>
+                    <td>Rp <?= number_format($row['total_akhir'], 0, ',', '.') ?></td>
                 </tr>
-            <?php endif; ?>
+            <?php endforeach; ?>
         </tbody>
     </table>
 
