@@ -14,7 +14,7 @@
                     </center>
                 </div>
                 <div class="card-footer">
-                    <a href='<?= base_url('owner/barang') ?>' class="btn btn-block btn-primary">Tabel Barang <i class='fa fa-angle-double-right'></i></a>
+                    <a href='<?= base_url('owner/barang') ?>' class="btn btn-block btn-dark">Tabel Barang <i class='fa fa-angle-double-right'></i></a>
                 </div>
             </div>
         </div>
@@ -31,7 +31,7 @@
                     </center>
                 </div>
                 <div class="card-footer">
-                    <a href='<?= base_url('owner/barang') ?>' class="btn btn-block btn-primary">Tabel Barang <i class='fa fa-angle-double-right'></i></a>
+                    <a href='<?= base_url('owner/barang') ?>' class="btn btn-block btn-dark">Tabel Barang <i class='fa fa-angle-double-right'></i></a>
                 </div>
             </div>
         </div>
@@ -48,7 +48,7 @@
                     </center>
                 </div>
                 <div class="card-footer">
-                    <a href='<?= base_url('owner/laporan') ?>' class="btn btn-block btn-primary">Tabel laporan <i class='fa fa-angle-double-right'></i></a>
+                    <a href='<?= base_url('owner/laporan') ?>' class="btn btn-block btn-dark">Tabel laporan <i class='fa fa-angle-double-right'></i></a>
                 </div>
             </div>
         </div>
@@ -65,7 +65,7 @@
                     </center>
                 </div>
                 <div class="card-footer">
-                    <a href='<?= base_url('owner/kategori') ?>' class="btn btn-block btn-primary">Tabel Kategori <i class='fa fa-angle-double-right'></i></a>
+                    <a href='<?= base_url('owner/kategori') ?>' class="btn btn-block btn-dark">Tabel Kategori <i class='fa fa-angle-double-right'></i></a>
                 </div>
             </div>
         </div>

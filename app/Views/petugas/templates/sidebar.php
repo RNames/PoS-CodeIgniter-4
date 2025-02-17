@@ -42,6 +42,19 @@
     </li>
 
     <li class="nav-item active">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse5" aria-expanded="true" aria-controls="collapse5">
+            <i class="fas fa-fw fa-user"></i>
+            <span>Pengaturan Member</span>
+        </a>
+        <div id="collapse5" class="collapse" aria-labelledby="heading5" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="<?= base_url('petugas/pengaturan-member') ?>">Member Aktif</a>
+                <a class="collapse-item" href="<?= base_url('petugas/pengaturan-member/nonaktif') ?>">Member Nonaktif</a>
+            </div>
+        </div>
+    </li>
+
+    <li class="nav-item active">
         <a class="nav-link" href="<?= base_url('logout') ?>">
             <i class="fas fa-fw fa-sign-out-alt"></i>
             <span>Logout</span>

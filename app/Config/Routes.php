@@ -89,6 +89,17 @@ $routes->group('petugas', ['filter' => 'role:petugas'], function ($routes) {
     $routes->get('transaksi', 'Petugas\TransaksiController::index');
     $routes->post('transaksi/proses', 'Petugas\TransaksiController::proses');
     $routes->get('transaksi/cetak_nota/(:num)', 'Petugas\TransaksiController::cetak_nota/$1');
+    
+    //Member
+    $routes->get('pengaturan-member', 'Petugas\SetMemberController::index');
+    $routes->get('pengaturan-member/create', 'Petugas\SetMemberController::create');
+    $routes->post('pengaturan-member/store', 'Petugas\SetMemberController::store');
+    $routes->get('pengaturan-member/edit/(:num)', 'Petugas\SetMemberController::edit/$1');
+    $routes->post('pengaturan-member/update/(:num)', 'Petugas\SetMemberController::update/$1');
+    $routes->get('pengaturan-member/delete/(:num)', 'Petugas\SetMemberController::delete/$1');
+    $routes->get('pengaturan-member/detail/(:num)', 'Petugas\SetMemberController::detail/$1');
+    $routes->get('pengaturan-member/nonaktif', 'Petugas\SetMemberController::nonaktif');
+    $routes->get('pengaturan-member/restore/(:num)', 'Petugas\SetMemberController::restore/$1');
 
     //Laporan
     $routes->get('laporan', 'Petugas\LaporanController::index');
