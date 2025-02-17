@@ -67,53 +67,53 @@
             </table>
         </div>
 
-            <div class="container mt-4 mb-4 row row-cols-2 g-3">
-                <div class="form-group col">
-                    <label>Diskon (%)</label>
-                    <input type="number" name="diskon" id="diskon" class="form-control" min="0" max="100" value="0">
-                </div>
-
-                <div class="form-group col">
-                    <label>Total Harga Barang</label>
-                    <input type="text" id="totalHargaBarang" class="form-control" readonly>
-                </div>
-
-                <div class="form-group col">
-                    <label>Diskon (Rp)</label>
-                    <input type="text" id="diskonRupiah" class="form-control" readonly>
-                </div>
-
-                <div class="form-group col">
-                    <label>Total Setelah Diskon</label>
-                    <input type="text" id="totalSetelahDiskon" class="form-control" readonly>
-                </div>
-
-                <div class="form-group col">
-                    <label>PPN (12%)</label>
-                    <input type="text" id="ppn" class="form-control" readonly>
-                </div>
-
-                <div class="form-group col">
-                    <label>Total Akhir</label>
-                    <input type="text" id="totalAkhir" class="form-control" readonly>
-                </div>
-
-                <div class="form-group col">
-                    <label>Bayar</label>
-                    <input type="number" name="total_bayar" id="totalBayar" class="form-control" required>
-                    <div id="warningText" style="color: red; font-weight: bold; display: none;">
-                        Uang masih kurang!
-                    </div>
-                </div>
-
-                <div class="form-group col">
-                    <label>Kembalian</label>
-                    <input type="text" id="kembalian" class="form-control" readonly>
-                </div>
-
+        <div class="container mt-4 mb-4 row row-cols-2 g-3">
+            <div class="form-group col">
+                <label>Diskon (%)</label>
+                <input type="number" name="diskon" id="diskon" class="form-control" min="0" max="100" value="0">
             </div>
 
-            <button type="button" id="btnSimpanTransaksi" class="btn btn-success btn-block">Simpan Transaksi</button>
+            <div class="form-group col">
+                <label>Total Harga Barang</label>
+                <input type="text" id="totalHargaBarang" class="form-control" readonly>
+            </div>
+
+            <div class="form-group col">
+                <label>Diskon (Rp)</label>
+                <input type="text" id="diskonRupiah" class="form-control" readonly>
+            </div>
+
+            <div class="form-group col">
+                <label>Total Setelah Diskon</label>
+                <input type="text" id="totalSetelahDiskon" class="form-control" readonly>
+            </div>
+
+            <div class="form-group col">
+                <label>PPN (12%)</label>
+                <input type="text" id="ppn" class="form-control" readonly>
+            </div>
+
+            <div class="form-group col">
+                <label>Total Akhir</label>
+                <input type="text" id="totalAkhir" class="form-control" readonly>
+            </div>
+
+            <div class="form-group col">
+                <label>Bayar</label>
+                <input type="number" name="total_bayar" id="totalBayar" class="form-control" required>
+                <div id="warningText" style="color: red; font-weight: bold; display: none;">
+                    Uang masih kurang!
+                </div>
+            </div>
+
+            <div class="form-group col">
+                <label>Kembalian</label>
+                <input type="text" id="kembalian" class="form-control" readonly>
+            </div>
+
+        </div>
+
+        <button type="button" id="btnSimpanTransaksi" class="btn btn-success btn-block">Simpan Transaksi</button>
 
     </form>
 </div>
@@ -251,10 +251,16 @@
             hitungTotal();
         });
 
-        // Event untuk input diskon (otomatis menghitung diskon dalam Rp)
+        // Event untuk input diskon (batas maksimal 100%)
         $("#diskon").on("input", function() {
+            let diskonPersen = parseInt($(this).val()) || 0;
+            if (diskonPersen > 100) {
+                $(this).val(100);
+                diskonPersen = 100;
+            }
             hitungTotal();
         });
+
 
         // Event untuk input bayar (validasi pembayaran)
         $("#totalBayar").on("input", function() {
@@ -272,9 +278,21 @@
 
             let diskonPersen = parseInt($("#diskon").val()) || 0;
             let diskonRupiah = (total * diskonPersen) / 100;
+
+            // Bulatkan diskon ke ratusan
+            diskonRupiah = roundToNearestHundred(diskonRupiah);
+
             let totalSetelahDiskon = total - diskonRupiah;
+
             let ppn = (totalSetelahDiskon * 12) / 100;
+
+            // Bulatkan PPN ke ratusan
+            ppn = roundToNearestHundred(ppn);
+
             let totalAkhir = totalSetelahDiskon + ppn;
+
+            // Bulatkan total akhir ke ratusan
+            totalAkhir = roundToNearestHundred(totalAkhir);
 
             $("#diskonRupiah").val(formatRupiah(diskonRupiah));
             $("#totalSetelahDiskon").val(formatRupiah(totalSetelahDiskon));
@@ -283,6 +301,8 @@
 
             hitungKembalian();
         }
+
+
 
         function hitungKembalian() {
             let totalAkhir = parseInt($("#totalAkhir").val().replace(/\D/g, "")) || 0;
@@ -303,6 +323,11 @@
         function formatRupiah(angka) {
             return "Rp. " + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
+
+        function roundToNearestHundred(value) {
+            return Math.round(value / 100) * 100;
+        }
+
     });
 </script>
 
