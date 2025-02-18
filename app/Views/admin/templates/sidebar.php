@@ -1,11 +1,34 @@
 <!-- Sidebar -->
+
+<style>
+    .nav-item .nav-link.collapsed::after {
+
+        color: black !important;
+    }
+
+    .nav-item .nav-link[data-toggle=collapse]::after {
+
+        color: black !important;
+    }
+
+    .nav-item .nav-link {
+        width: 100% !important;
+    }
+
+    .hovers {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .hovers:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
 <ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?= base_url('owner/dashboard') ?>">
-        <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-cash-register"></i>
-        </div>
         <div class="sidebar-brand-text mx-3">KASIRAN</div>
     </a>
 
@@ -13,88 +36,86 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Home -->
-    <li class="nav-item active">
-        <a class="nav-link" href="<?= base_url('owner/dashboard') ?>">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Home</span>
+
+    <li class="nav-item active bg-white my-2 mx-3 shadow rounded hovers">
+        <a class="nav-link " href="<?= base_url('owner/dashboard') ?>">
+            <i class="fas fa-fw fa-tachometer-alt text-primary"></i>
+            <span class="text-dark">Home</span>
         </a>
     </li>
 
-    <li class="nav-item active">
+
+    <li class="nav-item active bg-white my-2 mx-3 shadow rounded hovers">
         <a class="nav-link" href="<?= base_url('owner/logs') ?>">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Logs</span>
+            <i class="fas fa-fw fa-database text-primary"></i>
+            <span class="text-dark">Logs</span>
         </a>
     </li>
 
-    <li class="nav-item active">
+    <li class="nav-item active bg-white my-2 mx-3 shadow rounded hovers">
         <a class="nav-link" href="<?= base_url('owner/transaksi') ?>">
-            <i class="fas fa-fw fa-cash-register"></i>
-            <span>Transaksi</span>
+            <i class="fas fa-fw fa-cash-register text-primary"></i>
+            <span class="text-dark">Transaksi</span>
         </a>
     </li>
 
-    <li class="nav-item active">
+    <li class="nav-item active bg-white my-2 mx-3 shadow rounded hovers">
         <a class="nav-link" href="<?= base_url('owner/laporan') ?>">
-            <i class="fas fa-fw fa-desktop"></i>
-            <span>Laporan Transaksi</span>
+            <i class="fas fa-fw fa-desktop text-primary"></i>
+            <span class="text-dark">Laporan Transaksi</span>
         </a>
     </li>
 
     <!-- Nav Item - Data Produk -->
-    <li class="nav-item active">
+    <li class="nav-item active bg-white my-2 mx-3 shadow rounded hovers">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-            <i class="fas fa-fw fa-box"></i>
-            <span>Data Produk</span>
+            <i class="fas fa-fw fa-box text-primary"></i>
+            <span class="text-dark text-center">Data Produk</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
+            <div class="bg-white py-2 collapse-inner shadow rounded">
                 <a class="collapse-item" href="<?= base_url('owner/barang') ?>">Barang</a>
                 <a class="collapse-item" href="<?= base_url('owner/kategori') ?>">Kategori</a>
             </div>
         </div>
     </li>
 
-    <li class="nav-item active">
+    <li class="nav-item active bg-white my-2 mx-3 shadow rounded hovers">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse4" aria-expanded="true" aria-controls="collapse4">
-            <i class="fas fa-fw fa-user-nurse"></i>
-            <span>Pengaturan Petugas</span>
+            <i class="fas fa-fw fa-user-nurse text-primary"></i>
+            <span class="text-dark text-center">Pengaturan Petugas</span>
         </a>
         <div id="collapse4" class="collapse" aria-labelledby="heading4" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
+            <div class="bg-white py-2 collapse-inner shadow rounded">
                 <a class="collapse-item" href="<?= base_url('owner/pengaturan-petugas') ?>">Petugas Aktif</a>
                 <a class="collapse-item" href="<?= base_url('owner/pengaturan-petugas/nonaktif') ?>">Petugas Nonaktif</a>
             </div>
         </div>
     </li>
 
-    <li class="nav-item active">
+    <li class="nav-item active bg-white my-2 mx-3 shadow rounded hovers">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse5" aria-expanded="true" aria-controls="collapse5">
-            <i class="fas fa-fw fa-user"></i>
-            <span>Pengaturan Member</span>
+            <i class="fas fa-fw fa-user text-primary"></i>
+            <span class="text-dark">Pengaturan Member</span>
         </a>
         <div id="collapse5" class="collapse" aria-labelledby="heading5" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
+            <div class="bg-white py-2 collapse-inner shadow rounded">
                 <a class="collapse-item" href="<?= base_url('owner/pengaturan-member') ?>">Member Aktif</a>
                 <a class="collapse-item" href="<?= base_url('owner/pengaturan-member/nonaktif') ?>">Member Nonaktif</a>
             </div>
         </div>
     </li>
 
-    <li class="nav-item active">
+    <li class="nav-item active bg-white my-2 mx-3 shadow rounded hovers">
         <a class="nav-link" href="#" id="btnLogout">
-            <i class="fas fa-fw fa-sign-out-alt"></i>
-            <span>Logout</span>
+            <i class="fas fa-fw fa-sign-out-alt text-primary"></i>
+            <span class="text-dark">Logout</span>
         </a>
     </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider my-0 mb-3">
 
-    <!-- Sidebar Toggler (Sidebar) -->
-    <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-    </div>
 
 </ul>
 <!-- End of Sidebar -->

@@ -1,6 +1,7 @@
 <?= $this->include('admin/templates/header') ?>
 <?= $this->include('admin/templates/sidebar') ?>
 
+
 <div class="container p-5 pt-4 mb-3 mr-5 bg-white border rounded">
     <form id="transaksiForm" action="<?= base_url('owner/transaksi/proses') ?>" method="post">
         <input type="hidden" name="tipe_member" id="tipe_member">
@@ -56,7 +57,6 @@
                 <thead>
                     <tr>
                         <th>Nama Barang</th>
-                        <th>Satuan</th>
                         <th>Stok</th>
                         <th>Harga</th>
                         <th>Jumlah</th>
@@ -259,8 +259,7 @@
                 $("#barangList").append(`
             <tr id="barang-${barangID}">
                 <td>${namaBarang}</td>
-                <td>${satuan}</td>
-                <td class="stok-barang">${stok}</td>
+                <td class="stok-barang">${stok} ${satuan}</td>
                 <td class="harga-barang"
                     data-harga1="${selected.attr("data-harga1")}"
                     data-harga2="${selected.attr("data-harga2")}"
