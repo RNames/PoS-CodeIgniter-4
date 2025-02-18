@@ -4,7 +4,7 @@
 <div class="container p-5 pt-4 pb-4 mb-5 mr-5 bg-white border rounded">
     <div class="row">
         <div class="col-2">
-            <a href="<?= base_url('owner/barang') ?>" class="btn btn-secondary"><i class="fas fa-fw fa-angle-left"></i>Kembali</a>
+            <a href="<?= base_url('owner/barang') ?>" class="btn btn-secondary"><i class="fas fa-fw fa-angle-left"></i> Kembali</a>
         </div>
         <div class="col-8">
             <h2 class="text-center">Tambah Barang</h2>
@@ -27,8 +27,18 @@
             </div>
 
             <div class="form-group col">
+                <label>Satuan</label>
+                <input type="text" name="satuan" class="form-control" required placeholder="Contoh: pcs, box, kg">
+            </div>
+            
+            <div class="form-group col">
                 <label>Tanggal Beli</label>
                 <input type="date" name="tanggal_beli" class="form-control" required>
+            </div>
+            
+            <div class="form-group col">
+                <label>Harga Beli (HPP)</label>
+                <input type="number" id="harga_beli" name="harga_beli" class="form-control" required oninput="hitungHargaJual()">
             </div>
 
             <div class="form-group col">
@@ -36,43 +46,42 @@
                 <input type="date" name="tanggal_expired" class="form-control" required>
             </div>
 
-            <div class="form-group col">
-                <label>Harga Beli (HPP)</label>
-                <input type="number" id="harga_beli" name="harga_beli" class="form-control" required oninput="hitungHargaJual()">
+
+            <div class="form-group col-12">
+                <div class=" row row-cols-3 g-3">
+
+                    <div class="form-group col">
+                        <label>Harga Jual 1 (+10%)</label>
+                        <input type="number" id="harga_jual_1" name="harga_jual_1" class="form-control" required readonly>
+                    </div>
+
+                    <div class="form-group col">
+                        <label>Harga Jual 2 (+20%)</label>
+                        <input type="number" id="harga_jual_2" name="harga_jual_2" class="form-control" required readonly>
+                    </div>
+
+                    <div class="form-group col">
+                        <label>Harga Jual 3 (+30%)</label>
+                        <input type="number" id="harga_jual_3" name="harga_jual_3" class="form-control" required readonly>
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group col">
-                <label>Harga Jual 1 (+10%)</label>
-                <input type="number" id="harga_jual_1" name="harga_jual_1" class="form-control" required readonly>
+                <div class="form-group col">
+                    <label>Minimal Stok</label>
+                    <input type="number" id="minimal_stok" name="minimal_stok" class="form-control" required>
+                </div>
+
+                <div class="form-group col">
+                    <label>Stok</label>
+                    <input type="number" name="stok" class="form-control" required>
+                </div>
             </div>
-
-
-            <div class="form-group col">
-                <label>Harga Jual 2 (+20%)</label>
-                <input type="number" id="harga_jual_2" name="harga_jual_2" class="form-control" required readonly>
-            </div>
-
-
-            <div class="form-group col">
-                <label>Harga Jual 3 (+30%)</label>
-                <input type="number" id="harga_jual_3" name="harga_jual_3" class="form-control" required readonly>
-            </div>
-
-            <div class="form-group col">
-                <label>Minimal Stok</label>
-                <input type="number" id="minimal_stok" name="minimal_stok" class="form-control" required>
-            </div>
-
-            <div class="form-group col">
-                <label>Stok</label>
-                <input type="number" name="stok" class="form-control" required>
-            </div>
-        </div>
-        <button type="submit" class="btn btn-block btn-success mt-3">Simpan</button>
+            <button type="submit" class="btn btn-block btn-success mt-3">Simpan</button>
 
     </form>
-
 </div>
+
 <script>
     function hitungHargaJual() {
         let hpp = parseFloat(document.getElementById('harga_beli').value) || 0;

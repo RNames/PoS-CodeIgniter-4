@@ -22,9 +22,10 @@
                     <optgroup label="Member 1 & 2">
                         <?php foreach ($members as $member) : ?>
                             <?php if ($member['tipe_member'] != 3) : ?>
-                                <option value="<?= $member['id'] ?>" data-type="<?= $member['tipe_member'] ?>">
-                                    Tipe <?= $member['tipe_member'] ?> | <?= $member['nm_member'] ?>
+                                <option value="<?= $member['id'] ?>" data-type="<?= $member['tipe_member'] ?>" data-poin="<?= $member['poin'] ?>">
+                                    Tipe <?= $member['tipe_member'] ?> | <?= $member['nm_member'] ?> (Poin: <?= $member['poin'] ?>)
                                 </option>
+
                             <?php endif; ?>
                         <?php endforeach; ?>
                     </optgroup>
@@ -38,11 +39,12 @@
                     <?php foreach ($barangs as $barang) : ?>
                         <option value="<?= $barang['id'] ?>"
                             data-nama="<?= $barang['nama_barang'] ?>"
+                            data-satuan="<?= $barang['satuan'] ?>"
                             data-stok="<?= $barang['total_stok'] ?>"
                             data-harga1="<?= $barang['harga_jual_1'] ?>"
                             data-harga2="<?= $barang['harga_jual_2'] ?>"
                             data-harga3="<?= $barang['harga_jual_3'] ?>">
-                            <?= $barang['nama_barang'] ?> (Stok: <?= $barang['total_stok'] ?>)
+                            <?= $barang['nama_barang'] ?> (Stok: <?= $barang['total_stok'] ?>) (<?= $barang['satuan'] ?>)
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -54,6 +56,7 @@
                 <thead>
                     <tr>
                         <th>Nama Barang</th>
+                        <th>Satuan</th>
                         <th>Stok</th>
                         <th>Harga</th>
                         <th>Jumlah</th>
@@ -67,53 +70,63 @@
             </table>
         </div>
 
-            <div class="container mt-4 mb-4 row row-cols-2 g-3">
-                <div class="form-group col">
-                    <label>Diskon (%)</label>
-                    <input type="number" name="diskon" id="diskon" class="form-control" min="0" max="100" value="0">
-                </div>
-
-                <div class="form-group col">
-                    <label>Total Harga Barang</label>
-                    <input type="text" id="totalHargaBarang" class="form-control" readonly>
-                </div>
-
-                <div class="form-group col">
-                    <label>Diskon (Rp)</label>
-                    <input type="text" id="diskonRupiah" class="form-control" readonly>
-                </div>
-
-                <div class="form-group col">
-                    <label>Total Setelah Diskon</label>
-                    <input type="text" id="totalSetelahDiskon" class="form-control" readonly>
-                </div>
-
-                <div class="form-group col">
-                    <label>PPN (12%)</label>
-                    <input type="text" id="ppn" class="form-control" readonly>
-                </div>
-
-                <div class="form-group col">
-                    <label>Total Akhir</label>
-                    <input type="text" id="totalAkhir" class="form-control" readonly>
-                </div>
-
-                <div class="form-group col">
-                    <label>Bayar</label>
-                    <input type="number" name="total_bayar" id="totalBayar" class="form-control" required>
-                    <div id="warningText" style="color: red; font-weight: bold; display: none;">
-                        Uang masih kurang!
-                    </div>
-                </div>
-
-                <div class="form-group col">
-                    <label>Kembalian</label>
-                    <input type="text" id="kembalian" class="form-control" readonly>
-                </div>
-
+        <div class="container mt-4 mb-4 row row-cols-2 g-3">
+            <div class="form-group col">
+                <label>Diskon (%)</label>
+                <input type="number" name="diskon" id="diskon" class="form-control" min="0" max="100" value="0">
             </div>
 
-            <button type="button" id="btnSimpanTransaksi" class="btn btn-success btn-block">Simpan Transaksi</button>
+            <div class="form-group col">
+                <label>Total Harga Barang</label>
+                <input type="text" id="totalHargaBarang" class="form-control" readonly>
+            </div>
+
+            <div class="form-group col">
+                <label>Diskon (Rp)</label>
+                <input type="text" id="diskonRupiah" class="form-control" readonly>
+            </div>
+
+            <div class="form-group col">
+                <label>Total Setelah Diskon</label>
+                <input type="text" id="totalSetelahDiskon" class="form-control" readonly>
+            </div>
+
+            <div class="form-group col">
+                <label>PPN (12%)</label>
+                <input type="text" id="ppn" class="form-control" readonly>
+            </div>
+
+            <div class="form-group col">
+                <label>Total Akhir</label>
+                <input type="text" id="totalAkhir" class="form-control" readonly>
+            </div>
+
+            <div class="form-group col">
+                <label>Gunakan Poin</label>
+                <input type="number" name="poin_digunakan" id="poinDigunakan" class="form-control" min="0" value="0">
+            </div>
+
+            <div class="form-group col">
+                <label>Total Poin</label>
+                <input type="text" id="totalPoin" class="form-control" readonly>
+            </div>
+
+            <div class="form-group col">
+                <label>Bayar</label>
+                <input type="number" name="total_bayar" id="totalBayar" class="form-control" required>
+                <div id="warningText" style="color: red; font-weight: bold; display: none;">
+                    Uang masih kurang!
+                </div>
+            </div>
+
+            <div class="form-group col">
+                <label>Kembalian</label>
+                <input type="text" id="kembalian" class="form-control" readonly>
+            </div>
+
+        </div>
+
+        <button type="button" id="btnSimpanTransaksi" class="btn btn-success btn-block">Simpan Transaksi</button>
 
     </form>
 </div>
@@ -187,11 +200,57 @@
             });
         });
 
+        $('#id_member').on('select2:select', function(e) {
+            let selectedOption = e.params.data.element;
+            let tipeMember = $(selectedOption).attr("data-type");
+            let totalPoin = $(selectedOption).attr("data-poin") || 0; // Ambil poin dari data atribut
+            $("#tipe_member").val(tipeMember);
+            $("#totalPoin").val(totalPoin); // Tampilkan total poin
+
+            // Update harga barang dalam tabel jika tipe member berubah
+            $(".harga-barang").each(function() {
+                let hargaBaru = $(this).attr("data-harga" + tipeMember);
+                $(this).text(formatRupiah(hargaBaru));
+                $(this).data("harga", hargaBaru);
+
+                // Update total harga per barang
+                let row = $(this).closest("tr");
+                let jumlah = row.find(".jumlah").val();
+                let totalBaru = jumlah * hargaBaru;
+                row.find(".total-harga").text(formatRupiah(totalBaru));
+            });
+
+            hitungTotal();
+        });
+
+        $("#poinDigunakan").on("input", function() {
+            let totalPoin = parseInt($("#totalPoin").val()) || 0;
+            let poinDigunakan = parseInt($(this).val()) || 0;
+            let totalAkhir = parseInt($("#totalAkhir").val().replace(/\D/g, "")) || 0;
+
+            if (poinDigunakan > totalPoin) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Poin Tidak Cukup!',
+                    text: 'Anda tidak memiliki cukup poin untuk digunakan!',
+                });
+                $(this).val(totalPoin);
+                poinDigunakan = totalPoin;
+            }
+
+            if (poinDigunakan > totalAkhir) {
+                $(this).val(totalAkhir);
+                poinDigunakan = totalAkhir;
+            }
+
+            hitungTotal();
+        });
 
         $("#pilihBarang").on("change", function() {
             let selected = $(this).find(":selected");
             let barangID = selected.val();
             let namaBarang = selected.attr("data-nama");
+            let satuan = selected.attr("data-satuan");
             let stok = selected.attr("data-stok");
             let tipeMember = $("#tipe_member").val();
             let harga = selected.attr("data-harga" + tipeMember);
@@ -200,6 +259,7 @@
                 $("#barangList").append(`
             <tr id="barang-${barangID}">
                 <td>${namaBarang}</td>
+                <td>${satuan}</td>
                 <td class="stok-barang">${stok}</td>
                 <td class="harga-barang"
                     data-harga1="${selected.attr("data-harga1")}"
@@ -251,15 +311,17 @@
             hitungTotal();
         });
 
-        // Event untuk input diskon (otomatis menghitung diskon dalam Rp)
+
         $("#diskon").on("input", function() {
             hitungTotal();
         });
 
-        // Event untuk input bayar (validasi pembayaran)
+
         $("#totalBayar").on("input", function() {
             hitungKembalian();
         });
+
+
 
         function hitungTotal() {
             let total = 0;
@@ -271,18 +333,25 @@
             $("#totalHargaBarang").val(formatRupiah(total));
 
             let diskonPersen = parseInt($("#diskon").val()) || 0;
-            let diskonRupiah = (total * diskonPersen) / 100;
+            let diskonRupiah = Math.floor((total * diskonPersen) / 100); // Menghindari desimal
             let totalSetelahDiskon = total - diskonRupiah;
-            let ppn = (totalSetelahDiskon * 12) / 100;
+            let ppn = Math.floor((totalSetelahDiskon * 12) / 100); // Menghindari desimal
             let totalAkhir = totalSetelahDiskon + ppn;
+
+            let poinDigunakan = parseInt($("#poinDigunakan").val()) || 0;
+            totalAkhir -= poinDigunakan; // Kurangi total akhir dengan poin
+
+            if (totalAkhir < 0) totalAkhir = 0;
 
             $("#diskonRupiah").val(formatRupiah(diskonRupiah));
             $("#totalSetelahDiskon").val(formatRupiah(totalSetelahDiskon));
             $("#ppn").val(formatRupiah(ppn));
-            $("#totalAkhir").val(formatRupiah(totalAkhir));
+            $("#totalAkhir").val(formatRupiah(totalAkhir)); // Pastikan tetap menggunakan format Rupiah
 
             hitungKembalian();
         }
+
+
 
         function hitungKembalian() {
             let totalAkhir = parseInt($("#totalAkhir").val().replace(/\D/g, "")) || 0;
@@ -299,6 +368,7 @@
                 $(".btn-success").prop("disabled", false);
             }
         }
+
 
         function formatRupiah(angka) {
             return "Rp. " + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");

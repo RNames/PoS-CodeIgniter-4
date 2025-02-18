@@ -108,10 +108,15 @@
         <hr>
 
         <p class="summary"><strong>Total Belanja:</strong> <span class="right">Rp <?= number_format($transaksi['total_belanja'], 0, ',', '.') ?></span></p>
+        <p class="summary"><strong>Poin Digunakan:</strong> <span class="right"><?= $transaksi['poin_digunakan'] ?></span></p>
         <p class="summary"><strong>Diskon:</strong> <span class="right"><?= $transaksi['diskon'] ?>%</span></p>
         <p class="summary"><strong>Total Akhir (PPN 12%):</strong> <span class="right">Rp <?= number_format($transaksi['total_akhir'], 0, ',', '.') ?></span></p>
         <p class="summary"><strong>Uang Dibayar:</strong> <span class="right">Rp <?= number_format($transaksi['total_bayar'], 0, ',', '.') ?></span></p>
         <p class="summary"><strong>Kembalian:</strong> <span class="right">Rp <?= number_format($transaksi['total_kembalian'], 0, ',', '.') ?></span></p>
+        
+        <hr>
+
+        <p class="summary"><strong>Poin Didapatkan:</strong> <span class="right"><?= $transaksi['poin_didapat'] ?></span></p>
     </div>
 
     <button class="btn-print" onclick="window.print()">Cetak</button>

@@ -16,6 +16,10 @@ class StokModel extends Model
         'deleted_at',
     ];
 
+    protected $useSoftDeletes = true;
+    protected $deletedField = 'deleted_at';
+
+
     public function getTotalStok($kode_barang)
     {
         return $this->selectSum('stok')

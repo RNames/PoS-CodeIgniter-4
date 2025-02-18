@@ -87,23 +87,24 @@ class LaporanController extends BaseController
 
     public function detail($id)
     {
-        // Ambil data transaksi berdasarkan ID
+
         $transaksi = $this->transaksiModel
             ->select('laporan.*, 
-                  petugas.nm_petugas as nama_kasir, 
-                  member.nm_member as nama_member, 
-                  member.tipe_member, 
-                  ROUND((laporan.total_belanja * (laporan.diskon / 100)) / 100) * 100 AS diskon_rp,
-            ROUND((laporan.total_belanja * 0.12) / 100) * 100 AS ppn,
-            ROUND((laporan.total_belanja + (laporan.total_belanja * 0.12)) / 100) * 100 AS total_setelah_ppn,
-            ROUND(laporan.total_akhir / 100) * 100 AS total_akhir,
-            ROUND(laporan.total_bayar / 100) * 100 AS total_bayar_bulat,
-            GREATEST(ROUND(laporan.total_bayar / 100) * 100 - ROUND(laporan.total_akhir / 100) * 100, 0) AS total_kembalian,
-                  ')
+              petugas.nm_petugas as nama_kasir, 
+              member.nm_member as nama_member, 
+              member.tipe_member, 
+              ROUND((laporan.total_belanja * (laporan.diskon / 100)) / 100) * 100 AS diskon_rp,
+              ROUND((laporan.total_belanja * 0.12) / 100) * 100 AS ppn,
+              ROUND((laporan.total_belanja + (laporan.total_belanja * 0.12)) / 100) * 100 AS total_setelah_ppn,
+              ROUND(laporan.total_akhir / 100) * 100 AS total_akhir,
+              ROUND(laporan.total_bayar / 100) * 100 AS total_bayar_bulat,
+              GREATEST(ROUND(laporan.total_bayar / 100) * 100 - ROUND(laporan.total_akhir / 100) * 100, 0) AS total_kembalian,
+              laporan.poin_digunakan')
             ->join('petugas', 'petugas.id = laporan.id_petugas')
             ->join('member', 'member.id = laporan.id_member')
             ->where('laporan.id', $id)
             ->first();
+
 
         if (!$transaksi) {
             return redirect()->to(base_url('owner/laporan'))->with('error', 'Transaksi tidak ditemukan.');
@@ -196,7 +197,7 @@ class LaporanController extends BaseController
         $kodeTransaksi = $this->request->getGet('kode_transaksi'); // Ambil filter kode transaksi
 
         $query = $this->detailTransaksiModel
-        ->select('
+            ->select('
         laporan.*, 
         petugas.nm_petugas as nama_petugas, 
         member.nm_member as nama_member, 
@@ -210,7 +211,8 @@ class LaporanController extends BaseController
             ->join('laporan', 'laporan.id = detail_laporan.id_laporan')
             ->join('barang', 'barang.id = detail_laporan.barang_id')
             ->join('petugas', 'petugas.id = laporan.id_petugas')
-            ->join('member', 'member.id = laporan.id_member'); // Pastikan member di-join
+            ->join('member', 'member.id = laporan.id_member')
+            ->groupBy('laporan.id');
 
 
         if (!empty($startDate) && !empty($endDate)) {

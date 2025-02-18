@@ -34,10 +34,14 @@ class TransaksiController extends BaseController
         $diskon = (float) $this->request->getPost('diskon');
         $total_bayar = (int) $this->request->getPost('total_bayar');
         $barangList = $this->request->getPost('jumlah');
+        $poin_digunakan = (int) $this->request->getPost('poin_digunakan');
 
         if (!$barangList) {
             return redirect()->back()->with('error', 'Pilih setidaknya satu barang!');
         }
+
+        $member = $memberModel->find($id_member);
+        $total_poin_member = $member ? (int)$member['poin'] : 0;
 
         $total_belanja = 0;
         $detailTransaksi = [];
@@ -77,14 +81,24 @@ class TransaksiController extends BaseController
         // 4. Hitung Total Akhir (Subtotal + PPN)
         $total_akhir = $subtotal + $ppn;
 
-        // 5. Hitung Kembalian
+        // 5. Kurangkan total akhir dengan poin yang digunakan
+        if ($poin_digunakan > $total_akhir) {
+            $poin_digunakan = $total_akhir; // Gunakan hanya poin sebesar total transaksi
+        }
+
+        $total_akhir -= $poin_digunakan; //Mengurangi total akhir dengan poin yang digunakan (jika ada)
+
+        // 6. Hitung Kembalian
         $total_kembalian = $total_bayar - $total_akhir;
 
-        // 6. Hitung Poin (Hanya untuk Tipe 1 dan 2)
-        $poin = 0;
+        // 7. Hitung Poin (Hanya untuk Tipe 1 dan 2)
+        $poin_didapat = 0;
         if ($tipe_member == 1 || $tipe_member == 2) {
-            $poin = floor($total_belanja * 0.02); // 2% dari total sebelum diskon & pajak
+            $poin_didapat = floor($total_belanja * 0.02); // 2% dari total sebelum diskon & pajak
         }
+
+        // 8. Update Poin Member
+        $poin_akhir = $total_poin_member - $poin_digunakan + $poin_didapat;
 
         // ✅ Generate Kode Transaksi
         $kode_transaksi = $transaksiModel->generateKodeTransaksi();
@@ -98,7 +112,8 @@ class TransaksiController extends BaseController
             'diskon' => $diskon,
             'diskon_rp' => $jumlah_diskon,
             'ppn' => $ppn,
-            'poin_didapat' => $poin,
+            'poin_didapat' => $poin_didapat,
+            'poin_digunakan' => $poin_digunakan,
             'total_akhir' => $total_akhir,
             'total_bayar' => $total_bayar,
             'total_kembalian' => $total_kembalian,
@@ -124,17 +139,11 @@ class TransaksiController extends BaseController
             ]);
         }
 
+        $memberModel->update($id_member, ['poin' => $poin_akhir]);
+
         // ✅ Update id_detail_laporan di tabel laporan agar sesuai dengan transaksi_id
         $transaksiModel->update($transaksi_id, ['id_detail_laporan' => $transaksi_id]);
 
-        // ✅ Update Poin Member
-        if ($poin > 0) {
-            $member = $memberModel->find($id_member);
-            if ($member) {
-                $new_poin = $member['poin'] + $poin;
-                $memberModel->update($id_member, ['poin' => $new_poin]);
-            }
-        }
 
         // ✅ Update Stok Barang Sesuai FIFO
         foreach ($detailTransaksi as $detail) {
@@ -171,7 +180,7 @@ class TransaksiController extends BaseController
         }
 
         session()->setFlashdata('transaksi_berhasil', [
-            'message' => 'Transaksi berhasil disimpan. Poin bertambah: ' . number_format($poin, 0),
+            'message' => 'Transaksi berhasil disimpan. Poin bertambah: ' . number_format($poin_didapat, 0),
             'id_transaksi' => $transaksi_id
         ]);
 

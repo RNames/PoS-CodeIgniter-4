@@ -49,11 +49,13 @@ $routes->group('owner', ['filter' => 'role:owner'], function ($routes) {
     $routes->get('barang/edit/(:num)', 'Owner\BarangController::edit/$1');
     $routes->post('barang/update/(:num)', 'Owner\BarangController::update/$1');
     $routes->get('barang/delete/(:num)', 'Owner\BarangController::delete/$1');
+    $routes->get('barang/cetakPDF', 'Owner\BarangController::cetakPDF');
 
+
+    //Stok Barang
     $routes->get('barang/tambahStok/(:segment)', 'Owner\BarangController::tambahStokForm/$1');
     $routes->post('barang/tambahStok', 'Owner\BarangController::tambahStok');
     $routes->get('barang/detail/(:segment)', 'Owner\BarangController::detail/$1');
-
     $routes->get('barang/editStokForm/(:num)', 'Owner\BarangController::editStokForm/$1');
     $routes->post('barang/updateStok/(:num)', 'Owner\BarangController::updateStok/$1');
     $routes->get('barang/deleteStok/(:num)', 'Owner\BarangController::deleteStok/$1');

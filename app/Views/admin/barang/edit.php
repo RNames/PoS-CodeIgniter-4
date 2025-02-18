@@ -17,6 +17,9 @@
             <?php endforeach; ?>
         </select>
 
+        <label>Satuan</label>
+        <input type="text" name="satuan" value="<?= esc($barang['satuan']); ?>" class="form-control" required>
+
         <label>Harga Beli</label>
         <input type="number" name="harga_beli" id="harga_beli" value="<?= $barang['harga_beli']; ?>" class="form-control" required>
 
@@ -32,7 +35,7 @@
         <label>Minimal Stok</label>
         <input type="number" name="minimal_stok" id="minimal_stok" value="<?= $barang['minimal_stok']; ?>" class="form-control" required>
 
-        <button type="submit" class="btn btn-success mt-3">Update</button>
+        <button type="button" id="btn-update" class="btn btn-success mt-3">Update</button>
     </form>
 </div>
 
@@ -44,6 +47,46 @@
         document.getElementById("harga_jual_2").value = hargaBeli + (hargaBeli * 0.20);
         document.getElementById("harga_jual_3").value = hargaBeli + (hargaBeli * 0.30);
     });
+
+    document.getElementById("btn-update").addEventListener("click", function() {
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Data akan diperbarui!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Update!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.querySelector("form").submit();
+            }
+        });
+    });
+
+    // Notifikasi sukses setelah update
+    <?php if (session()->getFlashdata('success')) : ?>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '<?= session()->getFlashdata('success'); ?>',
+            showConfirmButton: false,
+            timer: 2000
+        });
+    <?php endif; ?>
 </script>
+
+<?php if (session()->getFlashdata('success')) : ?>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '<?= session()->getFlashdata('success'); ?>',
+            showConfirmButton: false,
+            timer: 2000
+        });
+    </script>
+<?php endif; ?>
+
 
 <?= $this->include('admin/templates/footer') ?>

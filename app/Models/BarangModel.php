@@ -13,6 +13,7 @@ class BarangModel extends Model
         'kode_barang',
         'id_kategori',
         'nama_barang',
+        'satuan',
         'expired',
         'tanggal_beli',
         'harga_beli',

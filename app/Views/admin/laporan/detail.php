@@ -5,10 +5,15 @@
 
     <div class="row">
         <div class="col-2">
-            <a href="<?= base_url('owner/transaksi') ?>" class="btn btn-secondary"><i class="fas fa-fw fa-angle-left"></i>Kembali</a>
+            <a href="<?= base_url('owner/laporan') ?>" class="btn btn-secondary"><i class="fas fa-fw fa-angle-left"></i>Kembali</a>
         </div>
         <div class="col-8">
             <h2 class="text-center">Detail Transaksi</h2>
+        </div>
+        <div class="col-2 text-right">
+            <a href="<?= base_url('owner/transaksi/cetak_nota/' . $transaksi['id']) ?>" target="_blank" class="btn btn-primary">
+                <i class="fas fa-print"></i> Cetak Nota
+            </a>
         </div>
     </div>
 
@@ -55,35 +60,40 @@
                 <td>Rp <?= number_format($transaksi['total_kembalian'], 0, ',', '.') ?></td>
             </tr>
             <tr>
+                <th>Poin Digunakan</th>
+                <td><?= esc($transaksi['poin_digunakan']) ?></td>
+            </tr>
+            <tr>
                 <th>Poin Didapat</th>
                 <td><?= esc($transaksi['poin_didapat']) ?></td>
             </tr>
+
         </table>
     </div>
 
-        <h3>Barang yang Dibeli</h3>
-        <table class="table text-center mt-3">
-            <thead>
+    <h3>Barang yang Dibeli</h3>
+    <table class="table text-center mt-3">
+        <thead>
+            <tr>
+                <th>Kode Barang</th>
+                <th>Nama Barang</th>
+                <th>Jumlah</th>
+                <th>Harga Satuan</th>
+                <th>Total Harga</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($detailTransaksi as $detail) : ?>
                 <tr>
-                    <th>Kode Barang</th>
-                    <th>Nama Barang</th>
-                    <th>Jumlah</th>
-                    <th>Harga Satuan</th>
-                    <th>Total Harga</th>
+                    <td><?= esc($detail['kode_barang']) ?></td>
+                    <td><?= esc($detail['nama_barang']) ?></td>
+                    <td><?= esc($detail['jumlah']) ?></td>
+                    <td>Rp <?= number_format($detail['harga'], 0, ',', '.') ?></td>
+                    <td>Rp <?= number_format($detail['total_harga'], 0, ',', '.') ?></td>
                 </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($detailTransaksi as $detail) : ?>
-                    <tr>
-                        <td><?= esc($detail['kode_barang']) ?></td>
-                        <td><?= esc($detail['nama_barang']) ?></td>
-                        <td><?= esc($detail['jumlah']) ?></td>
-                        <td>Rp <?= number_format($detail['harga'], 0, ',', '.') ?></td>
-                        <td>Rp <?= number_format($detail['total_harga'], 0, ',', '.') ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
 
-    <?= $this->include('admin/templates/footer') ?>
+<?= $this->include('admin/templates/footer') ?>

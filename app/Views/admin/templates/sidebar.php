@@ -82,7 +82,7 @@
     </li>
 
     <li class="nav-item active">
-        <a class="nav-link" href="<?= base_url('logout') ?>">
+        <a class="nav-link" href="#" id="btnLogout">
             <i class="fas fa-fw fa-sign-out-alt"></i>
             <span>Logout</span>
         </a>
@@ -140,3 +140,26 @@
         <!-- Begin Page Content -->
         <div class="container-fluid">
             <!-- Your Page Content Here -->
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    document.getElementById("btnLogout").addEventListener("click", function(e) {
+                        e.preventDefault(); // Mencegah redirect langsung
+
+                        Swal.fire({
+                            title: "Konfirmasi Logout",
+                            text: "Apakah Anda yakin ingin keluar?",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#d33",
+                            cancelButtonColor: "#3085d6",
+                            confirmButtonText: "Ya, Logout!",
+                            cancelButtonText: "Batal"
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = "<?= base_url('logout') ?>"; // Redirect ke halaman logout
+                            }
+                        });
+                    });
+                });
+            </script>

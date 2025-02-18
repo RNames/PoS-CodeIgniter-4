@@ -7,6 +7,8 @@ use App\Models\BarangModel;
 use App\Models\StokModel;
 use App\Models\KategoriModel;
 use App\Models\LogsModel;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class BarangController extends BaseController
 {
@@ -25,19 +27,20 @@ class BarangController extends BaseController
 
     public function index()
     {
+        $this->autoSoftDeleteStok();
+
         $data['barang'] = $this->barangModel->getBarangWithTotalStok();
 
         return view('admin/barang/index', $data);
     }
 
-    // Form tambah barang
+
     public function create()
     {
         $data['kategori'] = $this->kategoriModel->findAll();
         return view('admin/barang/create', $data);
     }
 
-    // Simpan barang baru
     public function store()
     {
         $newIdBarang = $this->barangModel->generateIdBarang();
@@ -47,6 +50,7 @@ class BarangController extends BaseController
             'kode_barang'   => $newIdBarang,
             'id_kategori'   => $this->request->getPost('id_kategori'),
             'nama_barang'   => $this->request->getPost('nama_barang'),
+            'satuan'        => $this->request->getPost('satuan'), // Tambahkan satuan
             'harga_beli'    => $hargaBeli,
             'harga_jual_1'  => $hargaBeli + ($hargaBeli * 0.10),
             'harga_jual_2'  => $hargaBeli + ($hargaBeli * 0.20),
@@ -54,6 +58,7 @@ class BarangController extends BaseController
             'minimal_stok'  => $this->request->getPost('minimal_stok'),
             'created_at'    => date('Y-m-d H:i:s'),
         ];
+
 
         $this->barangModel->save($data);
 
@@ -94,11 +99,11 @@ class BarangController extends BaseController
             'time'       => date('Y-m-d H:i:s')
         ]);
 
+        session()->setFlashdata('success', 'Data barang berhasil diperbarui!');
+
         return redirect()->to(base_url('owner/barang'))->with('success', 'Barang dan stok berhasil ditambahkan!');
     }
 
-
-    // Form edit barang
     public function edit($id)
     {
         $data['barang'] = $this->barangModel->find($id);
@@ -106,7 +111,6 @@ class BarangController extends BaseController
         return view('admin/barang/edit', $data);
     }
 
-    // Update data barang
     public function update($id)
     {
         $oldData = $this->barangModel->find($id);
@@ -117,10 +121,11 @@ class BarangController extends BaseController
 
         $hargaBeliBaru = (int) $this->request->getPost('harga_beli');
 
-        // Data baru yang dapat diedit
+        // Data baru yang akan diperbarui
         $newData = [
             'id_kategori'   => $this->request->getPost('id_kategori'),
             'nama_barang'   => $this->request->getPost('nama_barang'),
+            'satuan'        => $this->request->getPost('satuan'),
             'harga_beli'    => $hargaBeliBaru,
             'harga_jual_1'  => $hargaBeliBaru + ($hargaBeliBaru * 0.10), // 10% markup
             'harga_jual_2'  => $hargaBeliBaru + ($hargaBeliBaru * 0.20), // 20% markup
@@ -134,6 +139,7 @@ class BarangController extends BaseController
         $logOldData = [
             'nama_barang'   => $oldData['nama_barang'],
             'id_kategori'   => $oldData['id_kategori'],
+            'satuan'        => $oldData['satuan'],
             'harga_beli'    => $oldData['harga_beli'],
             'harga_jual_1'  => $oldData['harga_jual_1'],
             'harga_jual_2'  => $oldData['harga_jual_2'],
@@ -144,11 +150,12 @@ class BarangController extends BaseController
         $logNewData = [
             'nama_barang'   => $newData['nama_barang'],
             'id_kategori'   => $newData['id_kategori'],
+            'satuan'        => $newData['satuan'],
             'harga_beli'    => $newData['harga_beli'],
             'harga_jual_1'  => $newData['harga_jual_1'],
             'harga_jual_2'  => $newData['harga_jual_2'],
             'harga_jual_3'  => $newData['harga_jual_3'],
-            'minimal_stok'  => $oldData['minimal_stok'],
+            'minimal_stok'  => $newData['minimal_stok'],
         ];
 
         $this->logsModel->save([
@@ -164,7 +171,6 @@ class BarangController extends BaseController
     }
 
 
-    // Hapus barang
     public function delete($id)
     {
         $barang = $this->barangModel->find($id);
@@ -194,6 +200,29 @@ class BarangController extends BaseController
         ]);
 
         return redirect()->to(base_url('owner/barang'))->with('success', 'Barang berhasil dihapus!');
+    }
+
+    public function cetakPDF()
+    {
+        // Ambil semua data barang
+        $barang = $this->barangModel->getBarangWithTotalStok();
+
+        // Load HTML tampilan ke dalam variabel
+        $data['barang'] = $barang;
+        $html = view('admin/barang/cetak_pdf', $data);
+
+        // Konfigurasi Dompdf
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $options->setIsRemoteEnabled(true); // Untuk mengaktifkan gambar dari URL
+
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+        // Output PDF ke browser
+        $dompdf->stream('Daftar_Barang.pdf', ['Attachment' => false]);
     }
 
     public function tambahStokForm($kode_barang)
@@ -355,5 +384,56 @@ class BarangController extends BaseController
         ]);
 
         return redirect()->back()->with('success', 'Stok berhasil dihapus!');
+    }
+
+    public function autoSoftDeleteStok()
+    {
+        // Ambil semua barang yang masih aktif
+        $barangList = $this->barangModel->findAll();
+
+        foreach ($barangList as $barang) {
+
+            $stokList = $this->stokModel->findAll();
+
+            foreach ($stokList as $stok) {
+                // Cek apakah stok habis
+                if ($stok['stok'] <= 0) {
+                    // Soft delete stok yang habis
+                    $this->stokModel->delete($stok['id']);
+
+                    // Simpan log penghapusan stok karena habis
+                    $this->logsModel->save([
+                        'id_petugas' => session()->get('id'),
+                        'action'     => 'Hapus',
+                        'msg'        => "Stok dengan kode barang '{$stok['kode_barang']}' telah dihapus (soft delete) karena stok habis.",
+                        'old_data'   => json_encode($stok),
+                        'new_data'   => json_encode(['deleted_at' => date('Y-m-d H:i:s')]),
+                        'time'       => date('Y-m-d H:i:s')
+                    ]);
+                }
+
+                // Cek apakah ada stok yang sudah expired
+                $expiredStok = $this->stokModel->where('kode_barang', $barang['kode_barang'])
+                    ->where('tanggal_expired <', date('Y-m-d'))
+                    ->findAll();
+
+                if (!empty($expiredStok)) {
+                    foreach ($expiredStok as $stok) {
+                        // Soft delete stok yang expired
+                        $this->stokModel->delete($stok['id']);
+
+                        // Simpan log penghapusan stok karena expired
+                        $this->logsModel->save([
+                            'id_petugas' => session()->get('id'),
+                            'action'     => 'Hapus',
+                            'msg'        => "Stok dengan kode barang '{$stok['kode_barang']}' telah dihapus (soft delete) karena expired.",
+                            'old_data'   => json_encode($stok),
+                            'new_data'   => json_encode(['deleted_at' => date('Y-m-d H:i:s')]),
+                            'time'       => date('Y-m-d H:i:s')
+                        ]);
+                    }
+                }
+            }
+        }
     }
 }
